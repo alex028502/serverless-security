@@ -1,0 +1,12 @@
+attr==0.3.1
+cffi==1.14.5
+click==7.1.2
+colorzero==2.0
+cryptography==3.4.7
+emailpgp==0.2.1
+gpiozero==1.6.2
+PGPy==0.5.4
+git+https://github.com/juga0/pyac@4dbe66dea1aed68966c0a4271167a434bc235e11#egg=PyAC
+pyasn1==0.4.8
+pycparser==2.20
+six==1.15.0

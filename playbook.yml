@@ -1,0 +1,28 @@
+---
+- name: deploy to target or test directory
+  hosts: all
+  tasks:
+    - name: copy package to target
+#      copy: src=../package dest={{destination}}
+      synchronize:
+        src: package
+        dest: "{{ security_camera_home }}"
+        rsync_opts:
+          - "--exclude=__pycache__"
+          - "--exclude=*.pyc"
+          - "--delete"
+    - name: copy requirements to target
+      copy: src=setup/requirements.txt dest={{ security_camera_home }}
+    - pip:
+        chdir: "{{ security_camera_home }}"
+        requirements: requirements.txt
+        virtualenv: venv
+        virtualenv_command: python3 -m venv
+    - name: remove old modules
+      shell: venv/bin/pip freeze | cat - requirements.txt requirements.txt | sort | uniq -u | grep -v PyAC | xargs --no-run-if-empty venv/bin/pip uninstall -y
+      args:
+        chdir: "{{ security_camera_home }}"
+    - name: generate .env
+      template: src=setup/.env.j2 dest={{ security_camera_home }}/.env
+    - name: generate security.service
+      template: src=setup/security.service.j2 dest={{ security_camera_home }}/security.service

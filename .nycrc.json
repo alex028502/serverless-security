@@ -1,0 +1,15 @@
+{
+  "all": true,
+  "exclude": [
+    "node_modules",
+    ".git",
+    "gems",
+    "coverage",
+    "venv"
+  ],
+  "lines": 100,
+  "branches": 100,
+  "statements": 100,
+  "functions": 100,
+  "report-dir": "coverage/js"
+}

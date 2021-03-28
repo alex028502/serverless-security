@@ -1,0 +1,6 @@
+ruby # sudo apt-get install ruby 
+# sudo apt-get install ruby-dev
+bundle # sudo gem install bundler
+jq
+python3
+convert

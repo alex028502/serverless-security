@@ -1,0 +1,22 @@
+/data
+/config
+/photo.jpg
+/venv
+__pycache__
+/htmlcov
+/.coverage
+/coverage
+/gems
+/coverage.json
+/.tmp-keys
+/node_modules
+/tests/keys*
+/tests/config/keys*
+/tests/accounts
+/tests/accounts.tmp
+/.nyc_coverage*
+/.nyc_output*
+/destination
+/.target
+./.coverage.raspberrypi.4022.457687 ./.coverage.raspberrypi.4024.374784 ./.coverage.raspberrypi.4027.900026 ./.coverage.raspberrypi.4030.046882 ./.coverage.raspberrypi.4040.352613
+/.coverage.*

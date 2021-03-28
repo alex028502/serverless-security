@@ -1,0 +1,14 @@
+[tool.black]
+line-length = 80
+target-version = ['py37']
+extend-exclude = '(^\./\.coverage|^\./\.target)'
+
+[tool.coverage.run]
+branch = true
+parallel = true
+include = ['./**/*', './*']
+omit = ['./venv/**/*', './.target/**/*', './node_modules/**/*', './gems/**/*']
+data_file = '.coverage/.coverage'
+
+[tool.coverage.html]
+directory = 'coverage/py'

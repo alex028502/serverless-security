@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "eslint": "^7.25.0",
+    "nyc": "^15.1.0",
+    "openpgp": "*"
+  }
+}

@@ -1,0 +1,36 @@
+#! /usr/bin/env bash
+
+set -e
+
+echo taking a fake picture
+echo $0 $@
+
+# avoiding if in this program because it has no extension
+# and so won't have test coverage measured
+# noise also tests the wrapper
+# that sends all stdout to stderr too!
+
+if [[ "$1" != "--device" ]]
+then
+  echo first arg must be --device not $1 1>&2
+  exit 1
+fi
+
+if [[ "$3" == "" ]] || [[ "$4" != "" ]]
+then
+  echo must have three args got $@ 1>&2
+  exit 1
+fi
+
+shift
+
+cp -v $@
+
+# that would be way more awesome to use
+# https://gist.github.com/zburgermeiszter/42b651a11f17578d9787
+# and v4l2loopback-dkms
+# and the real fswebcam in the tests
+# but when I tried it involved a lot of sudo
+# would be cool if you could put a fake device right in the
+# project directory instead of /dev
+# but this will work for now too

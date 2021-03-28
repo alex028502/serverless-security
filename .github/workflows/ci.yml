@@ -1,0 +1,38 @@
+
+name: Python application
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.7.5
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '12'
+    - uses: actions/setup-ruby@v1
+      with:
+        ruby-version: '2.6'
+    - name: update npm
+      run: npm --version && npm install -g npm
+    - name: install correct bundler
+      run: gem install bundler:2.2.16
+    - name: Install dependencies
+      run: make install
+    - name: Tests and Coverage
+      run: make test
+    - uses: actions/upload-artifact@v2
+      with:
+        name: coverage
+        path: coverage/*
+    - name: check coverage
+      run: make check-coverage
+    - name: Try to find issues with deployment
+      run: make e2e

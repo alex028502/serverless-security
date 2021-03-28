@@ -1,0 +1,13 @@
+{
+  "smtp": {
+    "address": "localhost",
+    "port": 2525,
+    "user": "",
+    "password": ""
+  },
+  "recipients": [
+    "tom@example.com",
+    "steve@example.com"
+  ],
+  "sender": "camera@example.com"
+}
