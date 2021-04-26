@@ -42,7 +42,7 @@ prod_home = "/home/username/appdir"
 
 prod_list, prod_details = try_inventory_file(
     "./inventory/prodarea.sh",
-    SECURITY_CAMERA_TARGET="%s:%s" % (prod_host, prod_home),
+    SECURITY_LIVE_TARGET="%s:%s" % (prod_host, prod_home),
 )
 
 assert_equal(prod_list["prod"][0], prod_host)

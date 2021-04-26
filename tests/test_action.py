@@ -142,16 +142,14 @@ def test_camera_args(photos, action_env, args):
         assert not os.path.isfile(arg_list[2])
 
 
-@pytest.mark.parametrize("volume", [1, 2, 3])
-def test(photos, action_env, volume, sut):
+def test(photos, action_env, sut):
     # now make sure the script that takes pictures works
-    iterations = volume
-    devices = photos  # the mock exe passes the photos right through
-    env = dict(os.environ, **action_env)
+    devices = " ".join(photos)  # the mock exe passes the photos right through
+    env = dict(os.environ, **action_env, SECURITY_CAMERA_DEVS=devices)
     datadir = env["_SECURITY_CAMERA_DATA"]
     assert os.path.isdir(datadir)
     p = subprocess.Popen(
-        ["%s/action.sh" % sut, str(iterations)] + devices,
+        ["%s/action.sh" % sut],
         env=env,
         close_fds=False,
         stdout=subprocess.PIPE,
@@ -159,25 +157,24 @@ def test(photos, action_env, volume, sut):
     output = p.communicate()[0].decode("utf-8")
     assert not p.returncode
     generated_files = files_chrono(datadir)
-    assert len(generated_files) == iterations * len(devices)
+    assert len(generated_files) == len(photos)
     # full paths in the output:
     assert "\n".join(generated_files) + "\n" == output
     output_photos = output.strip().split("\n")
-    assert len(output_photos) == volume * len(photos)
-    files_to_check = zip(output_photos, volume * photos)
-    for copy_of_file, original_file in files_to_check:
+    assert len(output_photos) == len(photos)
+    for copy_of_file, original_file in zip(output_photos, photos):
         assert_same_content(copy_of_file, original_file)
 
 
 def test_env_issue(photos, action_env, sut):
-    devices = photos  # the mock exe passes the photos right through
-    env = dict(os.environ, **action_env)
+    devices = " ".join(photos)  # the mock exe passes the photos right through
+    env = dict(os.environ, **action_env, SECURITY_CAMERA_DEVS=devices)
     variable_to_unset = "_SECURITY_CAMERA_DATA"
     env_mod = {
         variable_to_unset: "",
     }
     p = subprocess.Popen(
-        ["%s/action.sh" % sut, "3"] + devices,
+        ["%s/action.sh" % sut],
         env=dict(env, **env_mod),
         close_fds=False,
         stderr=subprocess.PIPE,

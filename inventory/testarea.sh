@@ -16,6 +16,7 @@ cat <<EOF
 {
   "ansible_connection": "local",
   "security_camera_home": "$PWD/.target",
+  "security_camera_tuning": "8:8:1",
   "ansible_python_interpreter": "$interpreter"
 }
 EOF

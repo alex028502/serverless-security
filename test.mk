@@ -6,6 +6,8 @@ PY_COV_FILE=coverage.json
 PY=venv/bin/python
 
 TARGET_DIR=./.target
+DATA_DIR=$(TARGET_DIR)/data
+DATA_FILE=$(DATA_DIR)/testfile
 
 .PHONY: lint coverage $(COV_DIR)/index.html checks $(TARGET_DIR) e2e playbooks
 default: test lint check-coverage
@@ -51,12 +53,18 @@ compare-reqs:
 	! diff requirements.txt setup/requirements.txt | grep '>'
 	diff requirements.txt setup/requirements.txt | grep '<' > /dev/null
 e2e: compare-reqs deploy
+	ls $(DATA_DIR)
+	[ -z "$(ls -A $(DATA_DIR))" ] # thanks https://superuser.com/a/352290
+	! ls $(DATA_FILE)
+	touch $(DATA_FILE)
+	ls $(DATA_FILE)
 	$(MAKE) -f $(MAKEFILE_LIST) source-check
 	$(MAKE) -f $(MAKEFILE_LIST) venv-check
 	$(MAKE) -f $(MAKEFILE_LIST) mangle
 	! $(MAKE) -f $(MAKEFILE_LIST) source-check
-	! $(MAKE) -f $(MAKEFILE_LIST) venv-check
+	! $(MAKE) -f $(MAKEFILE_LIST) venv-check 
 	$(MAKE) -f $(MAKEFILE_LIST) redeploy
+	ls $(DATA_FILE)
 	$(MAKE) -f $(MAKEFILE_LIST) source-check
 	$(MAKE) -f $(MAKEFILE_LIST) venv-check
 	$(MAKE) -f $(MAKEFILE_LIST) e2e-test

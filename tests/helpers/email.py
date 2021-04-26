@@ -2,12 +2,16 @@ import time
 import os
 
 
-def wait_for_message(directory, number, limit):
+def wait_for_message(directory, expected, limit):
     start = time.time()
-    while len(files_chrono(directory)) != number:
-        assert time.time() - start < limit, len(files_chrono(directory))
+    while True:
+        current = len(files_chrono(directory))
+        assert current <= expected, "%s vs %s" % (current, expected)
+        if current == expected:
+            break
+        assert time.time() - start < limit, "%s vs %s" % (current, expected)
         time.sleep(0.1)
-    print("waited %s seconds for message #%s" % (time.time() - start, number))
+    print("waited %s seconds for message #%s" % (time.time() - start, current))
 
 
 def files_chrono(folder):

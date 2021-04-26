@@ -40,33 +40,6 @@ def service(email_server, env, sut):
 
 
 @pytest.fixture()
-def broken_camera(photos, bad_device, env, email_server, sut):
-    device_file_path = "%s/devices.txt" % env["SECURITY_CAMERA_HOME"]
-    # it comes with the two good devices so replace it with one good one and
-    # one bad one
-    with open(device_file_path, "w") as f:
-        f.write(photos[0] + "\n" + bad_device + "\n")
-    p = start_service(env, "%s/service.sh" % sut)
-    time.sleep(1)
-    yield p, email_server[1]
-    ctrl_key(p, "c")
-    time.sleep(1)
-
-
-@pytest.fixture()
-def misconfigured(env, email_server, sut):
-    # empty device file for example
-    device_file_path = "%s/devices.txt" % env["SECURITY_CAMERA_HOME"]
-    with open(device_file_path, "w") as f:
-        f.write("\n")
-    p = start_service(env, "%s/service.sh" % sut)
-    time.sleep(1)
-    yield p, email_server[1]
-    ctrl_key(p, "c")
-    time.sleep(1)
-
-
-@pytest.fixture()
 def alert(sut):
     # too hard to extract from file so we just hard code and check it
     value = "security alert"
@@ -129,16 +102,20 @@ def find_words_in_inbox(string, *args):
 def test(service, demo_keys, main_env, photos, email_config, alert):
     (config_dir, config) = email_config
     keys_dir = demo_keys[0]
-    batch_size = 9
+    batch_size = 2 * len(photos) + 1
     p, messages_folder = service
     assert not len(files_chrono(messages_folder))
     normal_state = 1
     wait_for_child_processes(p, normal_state)
     ctrl_key(p, "\\")
-    wait_for_message(messages_folder, batch_size, 4)
+    wait_for_message(messages_folder, batch_size, 6)
     wait_for_child_processes(p, normal_state)
+    print(files_chrono(messages_folder))
     ctrl_key(p, "\\")
-    wait_for_message(messages_folder, 2 * batch_size, 4)
+    print(files_chrono(messages_folder))
+    time.sleep(1)
+    print(files_chrono(messages_folder))
+    wait_for_message(messages_folder, 2 * batch_size, 6)
     wait_for_child_processes(p, normal_state)
 
     # the following is not that thorough, but hopefully as bugs appear we will
@@ -154,20 +131,20 @@ def test(service, demo_keys, main_env, photos, email_config, alert):
     )
     assert len(all_pictures_taken) == (batch_size - 1) * 2
     check_all_message_headers(batch, config)
-    for recipient in config["recipients"]:
-        assert (
-            find_words_in_inbox(
-                alert, batch, keys_dir, recipient, config["sender"]
-            )
-            == 1
-        )
-        for photo in photos:
-            assert (
-                find_file_in_inbox(
-                    photo, batch, keys_dir, recipient, config["sender"]
-                )
-                == 2
-            )
+
+    # check the content of one message for one recipient
+    # hopefully we check the details when we check the send
+    # program
+    recipient = config["recipients"][1]
+    photo = photos[1]
+    assert (
+        find_words_in_inbox(alert, batch, keys_dir, recipient, config["sender"])
+        == 1
+    )
+    assert (
+        find_file_in_inbox(photo, batch, keys_dir, recipient, config["sender"])
+        == 1
+    )
     assert not find_words_in_inbox(
         "fish", batch, keys_dir, recipient, config["sender"]
     )
@@ -177,29 +154,36 @@ def test(service, demo_keys, main_env, photos, email_config, alert):
         __file__, batch, keys_dir, recipient, config["sender"]
     )
 
+    # check one other recipient and photo to be sure
+    # takes about 3 seconds each time so don't want to do this too much
+    # but this should make us pretty confident that we are passing in the right
+    # arguments to send to all users
+    assert (
+        find_file_in_inbox(
+            photos[0],
+            batch,
+            keys_dir,
+            config["recipients"][0],
+            config["sender"],
+        )
+        == 1
+    )
 
-def test_broken_camera(broken_camera):
-    p, messages_folder = broken_camera
-    assert not len(files_chrono(messages_folder))
-    normal_state = 1
-    wait_for_child_processes(p, normal_state)
-    ctrl_key(p, "\\")
-    wait_for_message(messages_folder, 5, 4)
-    wait_for_child_processes(p, normal_state)
-    time.sleep(0.1)
-    ctrl_key(p, "\\")
-    wait_for_message(messages_folder, 10, 4)
-    wait_for_child_processes(p, normal_state)
+    # if the above went wrong we would probably notice by using the program
+    # but the the thing that we might not notice is it it is not encyrpted at
+    # all, or badly... and that is much harder to test as well
+    with pytest.raises(Exception, match="assert not 2"):
+        find_file_in_inbox(
+            photos[0], batch, keys_dir, demo_keys[1], config["sender"]
+        )
+    # all we are really checking is the return code from the decryption
+    # program so if we pass in arguments that fail for another reason
+    # like wrong items in a dictionary, we will _might_ get a different
+    # return code and know that we are not testing the right thing
+    # we really confirmed that the right thing is happening by finding
+    # this in the logs:
+    # Error: Error decrypting message: Session key decryption failed.
+    # but once we know that, just asserting the right return code
+    # and hoping that if something changes that picks it up
 
-
-def test_misconfigured(misconfigured):
-    p, messages_folder = misconfigured
-    assert not len(files_chrono(messages_folder))
-    normal_state = 1
-    wait_for_child_processes(p, normal_state)
-    ctrl_key(p, "\\")
-    wait_for_child_processes(p, normal_state)
-    time.sleep(0.3)
-    # we should not even get the test message because batch fails due to
-    # misconfiguration and not missing cameras when no cameras are given at all
-    assert not len(files_chrono(messages_folder))
+    # CONSIDER DOING ONE OF THESE CHECKS IN CRON

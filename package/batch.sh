@@ -10,7 +10,7 @@ heartbeat=heartbeat
 motion=motion
 
 function usage {
-  echo usage: ./batch.sh \[$heartbeat\|$motion\] \[DEVICES\]... 1>&2
+  echo usage: ./batch.sh \[$heartbeat\|$motion\] ... 1>&2
   # we also might want to do something like this, but it seems like this is
   # something that should not change at runtime so maybe just an error message
   # is enough
@@ -19,13 +19,6 @@ function usage {
 }
 
 if [[ "$mode" != $heartbeat ]] && [[ "$mode" != $motion ]] 
-then
-  usage
-fi
-
-shift
-
-if [[ "$1" == "" ]]
 then
   usage
 fi
@@ -40,10 +33,9 @@ then
   # always send text security alert first
   # send the previews as soon as they are ready and then
   # start sending full sized images
-  $dir/action.sh 2 $@ | $dir/shrink.sh | cat $dir/alert.txt - | $send_command
+  $dir/action.sh | $dir/shrink.sh | cat $dir/alert.txt - | $send_command
 else
   # to be used with cronjob mainly
-  # to send a reassuring picture every half hour
-  # from one of the devices
-  $dir/action.sh 1 $@ | $send_command
+  # to send reassuring pictures every half hour
+  $dir/action.sh | $send_command
 fi
