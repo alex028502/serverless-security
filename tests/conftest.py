@@ -116,13 +116,14 @@ def component_env(tmp_path, bin_dir, dirname, email_config):
         "PATH": "%s:%s/mock:%s" % (bin_dir, dirname, os.environ["PATH"]),
         "_SECURITY_CAMERA_DATA": str(data),
         "_SECURITY_CAMERA_CONFIG": email_config[0],
+        "SECURITY_CAMERA_TUNING": "8:20:0.8",
         "GPIOZERO_PIN_FACTORY": "mock",
     }
 
 
 # use this for testing the application entry points
 @pytest.fixture()
-def main_env(tmp_path, bin_dir, dirname, email_config, photos):
+def main_env(tmp_path, bin_dir, dirname, email_config, photos, bad_device):
     subprocess.run(
         ["cp", "-r", email_config[0], tmp_path],
         check=True,
@@ -133,12 +134,15 @@ def main_env(tmp_path, bin_dir, dirname, email_config, photos):
     #     check=True,
     # )
 
-    with open("%s/devices.txt" % tmp_path, "w") as f:
-        f.write("\n".join(photos) + "\n")
+    # there will always be bad devices in the list trying to take a picture and
+    # detecting all devices are the same process
+    devices = " ".join(photos + [bad_device])
 
     return {
         "PATH": "%s/mock:%s" % (dirname, os.environ["PATH"]),  # be careful
         "GPIOZERO_PIN_FACTORY": "mock",
         "SECURITY_CAMERA_HOME": str(tmp_path),
         "SECURITY_CAMERA_VENV": os.path.dirname(bin_dir),
+        "SECURITY_CAMERA_TUNING": "8:20:0.8",
+        "SECURITY_CAMERA_DEVS": devices,
     }

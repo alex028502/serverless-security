@@ -12,5 +12,3 @@ export _SECURITY_CAMERA_CONFIG=$SECURITY_CAMERA_HOME/config
 export _SECURITY_CAMERA_DATA=$SECURITY_CAMERA_HOME/data
 
 assert_env
-
-devices=$(cat $SECURITY_CAMERA_HOME/devices.txt)

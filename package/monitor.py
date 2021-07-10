@@ -5,7 +5,7 @@ import time
 from threading import Thread
 import signal
 
-from gpiozero import Button
+from gpiozero import MotionSensor
 
 # from signal import pause
 
@@ -17,12 +17,29 @@ print("getting ready to run the following command whenever there is action")
 print(" ".join(command))
 print("listening to gpio here: %s" % os.getenv("GPIOZERO_PIN_FACTORY"))
 
-button = Button(4, pull_up=False)
+
+# oops - turns out I need to do this:
+def number(string):
+    if "." in string:
+        return float(string)
+    return int(string)
+
+
+tuning = dict(
+    zip(
+        ("queue_len", "sample_rate", "threshold"),
+        map(number, os.getenv("SECURITY_CAMERA_TUNING").split(":")),
+    )
+)
+
+print("camera sensitivity: %s" % tuning)
+
+sensor = MotionSensor(4, **tuning)
 
 
 def action():
     # time.sleep(.3)
-    print("motion detected or button pressed")
+    print("motion detected")
     p = subprocess.Popen(command, close_fds=False)
     print("kicked off %s" % p.pid)
     p.communicate()
@@ -38,10 +55,10 @@ def process_signal(*args):
 
 def simulate():
     conditional_message(not is_mock(), "error coming; not using mock pins")
-    conditional_message(is_mock(), "simulating button")
-    button.pin.drive_high()
+    conditional_message(is_mock(), "simulating motion")
+    sensor.pin.drive_high()
     time.sleep(0.1)
-    button.pin.drive_low()
+    sensor.pin.drive_low()
 
 
 signal.signal(signal.SIGQUIT, process_signal)
@@ -54,6 +71,6 @@ def is_mock():
 conditional_message(is_mock(), "use ctrl+\\ to simulate a click")
 
 while True:
-    if button.is_pressed:
+    if sensor.value:
         action()
     time.sleep(0.1)

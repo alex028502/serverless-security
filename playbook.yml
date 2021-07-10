@@ -19,10 +19,12 @@
         virtualenv: venv
         virtualenv_command: python3 -m venv
     - name: remove old modules
-      shell: venv/bin/pip freeze | cat - requirements.txt requirements.txt | sort | uniq -u | grep -v PyAC | xargs --no-run-if-empty venv/bin/pip uninstall -y
+      shell: venv/bin/pip freeze | cat - requirements.txt requirements.txt | sort | uniq -u | grep -v PyAC | grep -vw pkg-resources | xargs --no-run-if-empty venv/bin/pip uninstall -y
       args:
         chdir: "{{ security_camera_home }}"
     - name: generate .env
       template: src=setup/.env.j2 dest={{ security_camera_home }}/.env
     - name: generate security.service
       template: src=setup/security.service.j2 dest={{ security_camera_home }}/security.service
+    - name: Data directory if it does not exist
+      file: path={{ security_camera_home }}/data state=directory

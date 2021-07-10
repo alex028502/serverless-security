@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 EnvironmentFile={{ security_camera_home }}/.env
-ExecStart=package/service.sh
+ExecStart={{ security_camera_home }}/package/service.sh
 WorkingDirectory={{ security_camera_home }}
 StandardOutput=inherit
 StandardError=inherit
