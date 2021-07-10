@@ -24,3 +24,14 @@ ls $remove_comments > /dev/null
 ./check-install.sh
 
 
+tuning_format_exe="venv/bin/python ./tools/tuning-format.py"
+$tuning_format_exe 3:3:3
+./tools/expect-failure.sh $tuning_format_exe 3:3
+./tools/expect-failure.sh $tuning_format_exe test
+./tools/expect-failure.sh $tuning_format_exe 3:3:3:3
+./tools/expect-failure.sh $tuning_format_exe test:test:test:test
+./tools/expect-failure.sh $tuning_format_exe
+./tools/expect-failure.sh $tuning_format_exe test:test:test
+./tools/expect-failure.sh 3:3:3.5 test # accidental argument
+
+
