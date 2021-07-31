@@ -48,7 +48,10 @@ prod_list, prod_details = try_inventory_file(
 assert_equal(prod_list["prod"][0], prod_host)
 assert_equal(os.path.abspath(prod_details["security_camera_home"]), prod_home)
 
-no_prod_list, no_prod_details = try_inventory_file("./inventory/prodarea.sh")
+no_prod_list, no_prod_details = try_inventory_file(
+    "./inventory/prodarea.sh",
+    SECURITY_LIVE_TARGET="",
+)
 
 assert_equal(no_prod_list, {})
 assert_equal(no_prod_details, {})

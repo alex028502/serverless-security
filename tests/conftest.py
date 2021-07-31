@@ -116,7 +116,6 @@ def component_env(tmp_path, bin_dir, dirname, email_config):
         "PATH": "%s:%s/mock:%s" % (bin_dir, dirname, os.environ["PATH"]),
         "_SECURITY_CAMERA_DATA": str(data),
         "_SECURITY_CAMERA_CONFIG": email_config[0],
-        "SECURITY_CAMERA_TUNING": "8:20:0.8",
         "GPIOZERO_PIN_FACTORY": "mock",
     }
 
@@ -143,6 +142,5 @@ def main_env(tmp_path, bin_dir, dirname, email_config, photos, bad_device):
         "GPIOZERO_PIN_FACTORY": "mock",
         "SECURITY_CAMERA_HOME": str(tmp_path),
         "SECURITY_CAMERA_VENV": os.path.dirname(bin_dir),
-        "SECURITY_CAMERA_TUNING": "8:20:0.8",
         "SECURITY_CAMERA_DEVS": devices,
     }
