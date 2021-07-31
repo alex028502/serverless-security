@@ -28,7 +28,6 @@ interpreter=$(which python3)
 cat <<EOF
 {
   "security_camera_home": "$target_path",
-  "security_camera_tuning": "$SECURITY_CAMERA_TUNING",
   "ansible_python_interpreter": "python3"
 }
 EOF

@@ -50,7 +50,6 @@ deploy:
 	set -a && . ./target.env && set +a && $(MAKE) _deploy
 _deploy:
 	[ "${SECURITY_LIVE_TARGET}" != "" ] # if the path makes no sense we'll find out soon
-	venv/bin/python tools/tuning-format.py ${SECURITY_CAMERA_TUNING}
 	venv/bin/ansible-playbook playbook.yml --limit prod -v
 	echo ${SECURITY_LIVE_TARGET} | cut -f 1 -d':' | xargs -I {} ssh {} 'sudo systemctl daemon-reload'
 	echo ${SECURITY_LIVE_TARGET} | cut -f 1 -d':' | xargs -I {} ssh {} 'sudo service security restart'
