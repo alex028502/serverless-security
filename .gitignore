@@ -20,3 +20,4 @@ __pycache__
 /.target
 ./.coverage.raspberrypi.4022.457687 ./.coverage.raspberrypi.4024.374784 ./.coverage.raspberrypi.4027.900026 ./.coverage.raspberrypi.4030.046882 ./.coverage.raspberrypi.4040.352613
 /.coverage.*
+/target.env

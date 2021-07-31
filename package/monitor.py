@@ -73,4 +73,4 @@ conditional_message(is_mock(), "use ctrl+\\ to simulate a click")
 while True:
     if sensor.value:
         action()
-    time.sleep(0.1)
+    time.sleep(0.01)
