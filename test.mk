@@ -8,6 +8,8 @@ PY=venv/bin/python
 TARGET_DIR=./.target
 DATA_DIR=$(TARGET_DIR)/data
 DATA_FILE=$(DATA_DIR)/testfile
+TARGET_VENV=$(TARGET_DIR)/venv
+
 
 .PHONY: lint coverage $(COV_DIR)/index.html checks $(TARGET_DIR) e2e playbooks
 default: test lint check-coverage
@@ -70,7 +72,11 @@ e2e: compare-reqs deploy
 	$(MAKE) -f $(MAKEFILE_LIST) venv-check
 	$(MAKE) -f $(MAKEFILE_LIST) e2e-test
 e2e-test:
-	$(PY) -m pytest --sut=$(TARGET_DIR)/package --interpreter=$(TARGET_DIR)/venv/bin/python -vvx
+	. $(TARGET_DIR)/.env && [ "$$SECURITY_CAMERA_DEVS" = '/dev/video*' ]
+	. $(TARGET_DIR)/.env && [ "$$GPIOZERO_PIN_FACTORY" = native ]
+	. $(TARGET_DIR)/.env && $(PY) tools/path_compare.py $${SECURITY_CAMERA_HOME} $(TARGET_DIR)
+	. $(TARGET_DIR)/.env && $(PY) tools/path_compare.py $${SECURITY_CAMERA_VENV} $(TARGET_VENV)
+	$(PY) -m pytest --sut=$(TARGET_DIR)/package --interpreter=$(TARGET_VENV)/bin/python -vvx
 source-check:
 	diff $(TARGET_DIR)/package package --exclude __pycache__ --exclude '*.pyc'
 	! find $(TARGET_DIR)/package -name '*.pyc' | grep . # thanks https://serverfault.com/a/225827
