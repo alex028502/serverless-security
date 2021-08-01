@@ -49,5 +49,5 @@ $(TEST_DIR)/images: makefile
 deploy:
 	[ "${SECURITY_LIVE_TARGET}" != "" ] # if the path makes no sense we'll find out soon
 	venv/bin/ansible-playbook playbook.yml --limit prod -v
-	echo ${SECURITY_LIVE_TARGET} | cut -f 1 -d':' | xargs -I {} ssh {} 'sudo systemctl daemon-reload'
-	echo ${SECURITY_LIVE_TARGET} | cut -f 1 -d':' | xargs -I {} ssh {} 'sudo service security restart'
+	./tools/server-action/run.sh ${SECURITY_LIVE_TARGET} 'sudo systemctl daemon-reload'
+	./tools/server-action/run.sh ${SECURITY_LIVE_TARGET} 'sudo service security restart'
