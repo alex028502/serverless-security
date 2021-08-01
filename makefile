@@ -27,8 +27,6 @@ test:
 	$(MAKE) -f test.mk
 e2e:
 	$(MAKE) -f test.mk e2e
-check-coverage:
-	$(MAKE) -f test.mk check-coverage
 $(CONF_DIR)/keys: $(TEST_DIR)/keys
 	rm -rf $@ $@.tmp
 	mkdir $@.tmp
