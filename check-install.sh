@@ -24,9 +24,9 @@ ls $remove_comments > /dev/null
 # check this out
 ./tools/expect-failure.sh ./tools/expect-failure.sh echo ok
 
-./sysreq.sh
-
 set -o pipefail
+
+$remove_comments sysreq.txt | xargs -n1 $sysreq
 
 # make sure that our requirements file matches what we have installed
 # if this fails maybe delete venv and try again
