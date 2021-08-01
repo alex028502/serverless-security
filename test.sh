@@ -2,6 +2,8 @@
 
 set -e
 
+./tools/test.sh
+
 venv/bin/python unit.py
 
 venv/bin/python tools/server-action/test.py
