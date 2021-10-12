@@ -1,0 +1,15 @@
+[Unit]
+Description=detect motion
+After=network.target
+
+[Service]
+EnvironmentFile={{ security_camera_home }}/.env
+ExecStart={{ security_camera_home }}/package/sensor.sh
+WorkingDirectory={{ security_camera_home }}
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
