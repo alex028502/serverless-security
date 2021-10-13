@@ -48,3 +48,4 @@ deploy:
 	venv/bin/ansible-playbook playbook.yml --limit prod -v
 	./tools/server-action/run.sh ${SECURITY_LIVE_TARGET} 'sudo systemctl daemon-reload'
 	./tools/server-action/run.sh ${SECURITY_LIVE_TARGET} 'sudo service security restart'
+	./tools/server-action/run.sh ${SECURITY_LIVE_TARGET} 'sudo service sensor restart'

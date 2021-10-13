@@ -3,8 +3,7 @@ Description=detect motion
 After=network.target
 
 [Service]
-EnvironmentFile={{ security_camera_home }}/.env
-ExecStart={{ security_camera_home }}/package/sensor.sh
+ExecStart={{ security_camera_home }}/venv/bin/python package/sensor.py
 WorkingDirectory={{ security_camera_home }}
 StandardOutput=inherit
 StandardError=inherit
