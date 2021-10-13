@@ -1,5 +1,4 @@
 def sensor_timer(sensor, light, output):
-    print("TESTING")
     # assert 3 == do_if_true(gimme3, True)
     # assert not do_if_true(gimme3, False)
     sensor[0].pin.drive_low()
@@ -27,4 +26,4 @@ def sensor_timer(sensor, light, output):
     assert light[1].value
     assert output.value
     yield
-    print("DONE TESTING")
+    print("done testing sensor")

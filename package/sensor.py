@@ -16,8 +16,6 @@ output = LED(21)
 
 assert len(light) == len(sensor)
 
-last_answers = "OK"
-
 for i in sensor_timer(sensor, light, output):
     answers = ""
     for idx in range(len(sensor)):
@@ -32,8 +30,3 @@ for i in sensor_timer(sensor, light, output):
         output.off()
     else:
         output.on()
-
-    if last_answers != answers:
-        print("%s - %s" % (answers, time.time()))
-
-    last_answers = answers

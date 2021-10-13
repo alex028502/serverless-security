@@ -2,6 +2,8 @@ import time
 import os
 from package import sensor_timer
 
+print("testing sensor and sensor timer")
+
 
 def assert_equal(a, b):
     assert a == b, "%s != %s" % (a, b)
@@ -24,7 +26,7 @@ for i in range(c):
     next(generator)
 
 ellapsed_time = time.time() - start_time
-print(ellapsed_time)
-
 assert ellapsed_time > 0.5, ellapsed_time
 assert ellapsed_time < 1.5, ellapsed_time
+print("done testing sensor timer")
+print()
