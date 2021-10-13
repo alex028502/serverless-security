@@ -1,5 +1,3 @@
-import time
-
 from gpiozero import Button, LED
 
 from sensor_timer import sensor_timer
