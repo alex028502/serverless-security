@@ -9,6 +9,7 @@ TARGET_DIR=./.target
 DATA_DIR=$(TARGET_DIR)/data
 DATA_FILE=$(DATA_DIR)/testfile
 TARGET_VENV=$(TARGET_DIR)/venv
+LIVE_PIN_FACTORY=native
 
 
 .PHONY: lint coverage $(COV_DIR)/index.html checks $(TARGET_DIR) e2e playbooks
@@ -73,7 +74,9 @@ e2e: compare-reqs deploy
 	$(MAKE) -f $(MAKEFILE_LIST) e2e-test
 e2e-test:
 	. $(TARGET_DIR)/.env && [ "$$SECURITY_CAMERA_DEVS" = '/dev/video*' ]
-	. $(TARGET_DIR)/.env && [ "$$GPIOZERO_PIN_FACTORY" = native ]
+	. $(TARGET_DIR)/.env && [ "$$GPIOZERO_PIN_FACTORY" = $(LIVE_PIN_FACTORY) ]
+	grep $(LIVE_PIN_FACTORY) $(TARGET_DIR)/sensor.service
+	. $(TARGET_DIR)/.env && grep $${SECURITY_CAMERA_HOME} $(TARGET_DIR)/sensor.service
 	. $(TARGET_DIR)/.env && grep $${SECURITY_CAMERA_HOME} $(TARGET_DIR)/security.service
 	. $(TARGET_DIR)/.env && $(PY) tools/path_compare.py $${SECURITY_CAMERA_HOME} $(TARGET_DIR)
 	. $(TARGET_DIR)/.env && $(PY) tools/path_compare.py $${SECURITY_CAMERA_VENV} $(TARGET_VENV)
