@@ -26,5 +26,7 @@
       template: src=setup/.env.j2 dest={{ security_camera_home }}/.env
     - name: generate security.service
       template: src=setup/security.service.j2 dest={{ security_camera_home }}/security.service
+    - name: generate sensor.service
+      template: src=setup/sensor.service.j2 dest={{ security_camera_home }}/sensor.service
     - name: Data directory if it does not exist
       file: path={{ security_camera_home }}/data state=directory

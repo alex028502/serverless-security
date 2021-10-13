@@ -14,7 +14,6 @@ PRI=private-key-1.asc
 
 .PHONY: install $(COV_DIR)/index.html test e2e
 install:
-	./sysreq.sh
 	python3 -m venv venv
 	venv/bin/pip install -r requirements.txt
 	./check-install.sh
@@ -49,3 +48,4 @@ deploy:
 	venv/bin/ansible-playbook playbook.yml --limit prod -v
 	./tools/server-action/run.sh ${SECURITY_LIVE_TARGET} 'sudo systemctl daemon-reload'
 	./tools/server-action/run.sh ${SECURITY_LIVE_TARGET} 'sudo service security restart'
+	./tools/server-action/run.sh ${SECURITY_LIVE_TARGET} 'sudo service sensor restart'
