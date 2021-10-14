@@ -13,24 +13,12 @@ function message {
 assert_env_value _SECURITY_CAMERA_DATA
 ls $_SECURITY_CAMERA_DATA > /dev/null
 
-# usually all /dev/video* will listed
-# so there will be failures every time
-# this is the only way I know to find out which are webcams
-# so might as well just try them all every time
-# (replace temp by query)
-# for device in $SECURITY_CAMERA_DEVS
-# do
-#   echo DEVICE is $device >&2
-# done
 for device in $SECURITY_CAMERA_DEVS
 do
   echo DEVICE is $device >&2
-  # raspberrypi doens't seem to have uuidgen even when you install util-linux
-  # suffix=$(uuidgen | sed 's/-//g' | cut -c1-10) # will _usually_ be unique
   tstamp=$(date +%s)
   filepath=$(./filename.sh $_SECURITY_CAMERA_DATA $tstamp jpg)
   message trying to capture $filepath with $device
-  # TODO less spam about cameras that don't exist
   fswebcam --device $device $filepath 1>&2 || message failure?
   if ls $filepath # this is the only stdout this produces
   then
