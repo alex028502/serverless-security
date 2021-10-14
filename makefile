@@ -14,6 +14,7 @@ PRI=private-key-1.asc
 
 .PHONY: install $(COV_DIR)/index.html test e2e
 install:
+	./sysreq.sh
 	python3 -m venv venv
 	venv/bin/pip install -r requirements.txt
 	./check-install.sh
