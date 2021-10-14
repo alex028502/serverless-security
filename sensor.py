@@ -1,15 +1,11 @@
 import time
 import os
 from package import sensor_timer
+from unittest import TestCase
 
 print("testing sensor and sensor timer")
 
-
-def assert_equal(a, b):
-    assert a == b, "%s != %s" % (a, b)
-
-
-assert_equal(os.getenv("GPIOZERO_PIN_FACTORY"), "mock")
+TestCase().assertEqual(os.getenv("GPIOZERO_PIN_FACTORY"), "mock")
 
 # this package will test itself since importing here changes the path to the
 # sensor_timer import!

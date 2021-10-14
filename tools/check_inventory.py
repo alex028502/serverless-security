@@ -2,6 +2,7 @@ import os
 import sys
 import subprocess
 import json
+from unittest import TestCase
 
 target_dir = os.path.abspath(sys.argv[1])
 
@@ -21,10 +22,6 @@ def json_from_command(command, **env):
     return json.loads(output)
 
 
-def assert_equal(a, b):
-    assert a == b, [a, b]
-
-
 def try_inventory_file(sut, **env):
     inventory_list = json_from_command([sut, "--list"], **env)
     inventory_details = json_from_command([sut, "--host"], **env)
@@ -34,8 +31,10 @@ def try_inventory_file(sut, **env):
 test_list, test_details = try_inventory_file("./inventory/testarea.sh")
 
 # good enough to tell me if something has changed:
-assert_equal(test_list["default"][0], "test")
-assert_equal(os.path.abspath(test_details["security_camera_home"]), target_dir)
+TestCase().assertEqual(test_list["default"][0], "test")
+TestCase().assertEqual(
+    os.path.abspath(test_details["security_camera_home"]), target_dir
+)
 
 prod_host = "example.com"
 prod_home = "/home/username/appdir"
@@ -45,13 +44,15 @@ prod_list, prod_details = try_inventory_file(
     SECURITY_LIVE_TARGET="%s:%s" % (prod_host, prod_home),
 )
 
-assert_equal(prod_list["prod"][0], prod_host)
-assert_equal(os.path.abspath(prod_details["security_camera_home"]), prod_home)
+TestCase().assertEqual(prod_list["prod"][0], prod_host)
+TestCase().assertEqual(
+    os.path.abspath(prod_details["security_camera_home"]), prod_home
+)
 
 no_prod_list, no_prod_details = try_inventory_file(
     "./inventory/prodarea.sh",
     SECURITY_LIVE_TARGET="",
 )
 
-assert_equal(no_prod_list, {})
-assert_equal(no_prod_details, {})
+TestCase().assertEqual(no_prod_list, {})
+TestCase().assertEqual(no_prod_details, {})
