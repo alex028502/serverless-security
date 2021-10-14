@@ -8,9 +8,6 @@ import time
 port = int(sys.argv[1])
 folder = sys.argv[2]
 
-print("HERE I AM")
-print(sys.argv)
-
 
 class FakeSMTPServer(smtpd.SMTPServer):
     def __init__(*args, **kwargs):
