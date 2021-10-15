@@ -3,8 +3,6 @@ import os
 import time
 import subprocess
 
-import pytest
-
 from .helpers.email import files_chrono
 from .helpers.send import (
     message_from_file,
@@ -16,11 +14,6 @@ from .helpers.send import (
 )
 
 
-@pytest.fixture()
-def email_env(component_env):
-    return component_env
-
-
 def assert_same_but_different(a, b):
     # to make sure they are the same but that we didn't accidentally just have
     # two references to the same object
@@ -28,7 +21,7 @@ def assert_same_but_different(a, b):
     assert a != b
 
 
-def test(email_server, email_config, demo_keys, photos, email_env, sut):
+def test(email_server, email_config, demo_keys, photos, component_env, sut):
     keys_dir = demo_keys[0]
     stranger_address = demo_keys[1]
     (smtp_port, messages_folder) = email_server
@@ -41,7 +34,7 @@ def test(email_server, email_config, demo_keys, photos, email_env, sut):
 
     lines = [phrase, photo]
     messages = "\n".join(lines) + "\n"
-    env = dict(os.environ, **email_env)
+    env = dict(os.environ, **component_env)
 
     # you are not meant to use random stuff in tests but sometimes I do anyhow
     testsubject = "test" + str(int(time.time()) % 10)
