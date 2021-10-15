@@ -89,9 +89,6 @@ for line in get_input():
         # that does not exist for debugging
         data = MIMEText(filepath)
 
-    # putting the correct recipients argument in the following function call
-    # is not verified by the tests because the test server does not give
-    # us the recipients
     cmsg = autocrypt_message.sign_encrypt(
         profile, data.as_bytes(), sender, recipients
     )
@@ -109,6 +106,9 @@ for line in get_input():
     )
     keydata = autocrypt_message.get_own_public_keydata(profile, sender)
     autocrypt_message.add_ac_headers(msg, sender, keydata, None)
+    # putting the correct recipients argument in the following function call
+    # is not verified by the tests because the test server does not give
+    # us the recipients
     session.sendmail(sender, recipients, str(msg))
     print("%s sent" % filepath)
 
