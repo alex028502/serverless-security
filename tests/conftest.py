@@ -133,8 +133,10 @@ def main_env(tmp_path, bin_dir, dirname, email_config, photos, bad_device):
     #     check=True,
     # )
 
-    # there will always be bad devices in the list trying to take a picture and
-    # detecting all devices are the same process
+    # there will always be bad devices in the list
+    # we pass in /dev/video* in the environment
+    # then this gets filtered on startup for the motion sensor
+    # and the cron job just tries each one and fails for the bad devices
     devices = " ".join(photos + [bad_device])
 
     return {

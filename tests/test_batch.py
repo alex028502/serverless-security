@@ -45,10 +45,12 @@ def test_happy(
 ):
     (smtp_port, messages_folder) = email_server
     (config_dir, config) = email_config
-    # there will always be bad devices in the list since in practice we just
-    # pass in /dev/video* and they are not all cameras
-    # even some cameras have two devices on the list and only one works for this
-    # so we might as well just always test with at least one bad device
+    # always testing with one bad device because we used to pass in all the
+    # devices are now pre-filtered for the motion sensor but one could still
+    # get unplugged and not pre filtered for the cron job so there will always
+    # be bad devices - we do not test here with _no_ bad device so if I guess
+    # we could miss a bug where it breaks whenever there are no bad devices
+    # if that isn't covered by another test - we'll find out soon enough though
     devices = " ".join([bad_device] + photos[:device_count])
     returncode, output = batch(
         dict(os.environ, SECURITY_CAMERA_DEVS=devices, **env),
