@@ -1,13 +1,13 @@
 import json
 import os
 import sys
-from base64 import b64encode
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 
-from autocrypt import message as autocrypt_message
-from autocrypt import constants as autocrypt_constants
+
+import email_encryptor
+
 
 # I hope I figure out more about modules soon
 # assert os.getcwd() == os.path.dirname(__file__)
@@ -22,30 +22,7 @@ with open(conf_dir + "/settings.json") as json_file:
 sender = settings["sender"]
 recipients = settings["recipients"]
 
-
-def getkey(address, kind):
-    path = "%s/keys/%s/%s-key-1.asc" % (conf_dir, address, kind)
-    with open(path, mode="rb") as file:
-        return b64encode(file.read()).decode("ascii")
-
-
-profile = {
-    autocrypt_constants.ACCOUNTS: {
-        sender: {
-            autocrypt_constants.PUBKEY: getkey(sender, "public"),
-            autocrypt_constants.SECKEY: getkey(sender, "private"),
-        },
-    },
-    autocrypt_constants.PEERS: {
-        # fill this in right away
-    },
-}
-
-for recipient in recipients:
-    profile[autocrypt_constants.PEERS][recipient] = {
-        autocrypt_constants.PUBKEY: getkey(recipient, "public"),
-    }
-
+profile = email_encryptor.get_profile(conf_dir, sender, recipients)
 
 session = smtplib.SMTP(
     settings["smtp"]["address"],
@@ -89,23 +66,10 @@ for line in get_input():
         # that does not exist for debugging
         data = MIMEText(filepath)
 
-    cmsg = autocrypt_message.sign_encrypt(
-        profile, data.as_bytes(), sender, recipients
+    msg = email_encryptor.encrypt_message(
+        profile, data, sender, recipients, subject
     )
 
-    msg = autocrypt_message.gen_encrypted_email(str(cmsg))
-    autocrypt_message.add_headers(
-        msg,
-        sender,
-        recipients,
-        subject,
-        None,
-        False,
-        None,
-        {"Chat-Version": "1.0"},
-    )
-    keydata = autocrypt_message.get_own_public_keydata(profile, sender)
-    autocrypt_message.add_ac_headers(msg, sender, keydata, None)
     # putting the correct recipients argument in the following function call
     # is not verified by the tests because the test server does not give
     # us the recipients
