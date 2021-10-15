@@ -5,3 +5,4 @@ bundle # sudo gem install bundler
 jq
 python3
 convert
+exiftool # sudo apt-get install libimage-exiftool-perl

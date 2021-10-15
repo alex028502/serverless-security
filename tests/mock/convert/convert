@@ -1,0 +1,36 @@
+#! /usr/bin/env bash
+
+set -e
+
+if [[ "$1" == "--version" ]]
+then
+  echo FAKE
+  exit 0
+fi
+
+# this should create an image that is exactly like the original
+# except has a comment that it has been resized - so we can test
+# that the right images are being passed through all the programs
+# we can test that this works with the real converter in another test
+
+function conf-error {
+  echo unsupported configuration $@ >&2
+  exit 1
+}
+
+if [[ "$2" != "-resize" ]]
+then
+  conf-error $@
+fi
+
+if [[ "$4" == "" ]]
+then
+  conf-error $@
+fi
+
+if [[ "$5" != "" ]]
+then
+  conf-error $@
+fi
+
+cat $1 | exiftool -Comment="size $3" - > $4

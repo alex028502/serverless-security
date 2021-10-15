@@ -5,22 +5,14 @@ import os
 import pytest
 
 from .helpers.email import files_chrono
+from .helpers.path import env_with_extended_path
 
 
 @pytest.fixture()
-def action_env(component_env):
+def action_env(plain_env, action_env_vars, exe_path):
     # let's prove that certain parts don't matter for this test
-    path = ":".join(
-        filter(
-            lambda item: "venv" not in item,
-            component_env["PATH"].split(":"),
-        )
-    )
-    return dict(
-        component_env,
-        _SECURITY_CAMERA_CONFIG="",
-        GPIOZERO_PIN_FACTORY="",
-        PATH=path,
+    return env_with_extended_path(
+        dict(plain_env, **action_env_vars), exe_path["fswebcam"]
     )
 
 

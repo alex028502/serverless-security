@@ -5,12 +5,13 @@ set -e
 dir=$(dirname $0)
 
 mode=$1
+encryptor=$2
 
 heartbeat=heartbeat
 motion=motion
 
 function usage {
-  echo usage: ./batch.sh \[$heartbeat\|$motion\] ... 1>&2
+  echo usage: ./batch.sh \[$heartbeat\|$motion\] path/to/encryptor.py ... 1>&2
   # we also might want to do something like this, but it seems like this is
   # something that should not change at runtime so maybe just an error message
   # is enough
@@ -23,7 +24,12 @@ then
   usage
 fi
 
-send_command="python -u $dir/send.py $mode"
+if [[ "$encryptor" == "" ]] || ! ls $encryptor > /dev/null
+then
+  usage
+fi
+
+send_command="python -u $dir/send.py $encryptor $mode"
 
 set -o pipefail
 

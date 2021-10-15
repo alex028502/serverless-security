@@ -5,8 +5,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 
-
-import email_encryptor
+import importlib.util
 
 
 # I hope I figure out more about modules soon
@@ -15,6 +14,18 @@ import email_encryptor
 from unit import starttls
 
 conf_dir = os.environ["_SECURITY_CAMERA_CONFIG"]
+
+
+def import_by_path(path, name):
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+encryptor_path = sys.argv[1]
+
+email_encryptor = import_by_path(encryptor_path, "email_encryptor")
 
 with open(conf_dir + "/settings.json") as json_file:
     settings = json.load(json_file)
@@ -29,7 +40,7 @@ session = smtplib.SMTP(
     settings["smtp"]["port"],
 )
 
-label = sys.argv[1]
+label = sys.argv[2]
 
 print("sending batch as %s" % label)
 
