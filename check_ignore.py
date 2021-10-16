@@ -3,7 +3,6 @@ import sys
 import re
 import toml
 import configparser
-import fnmatch
 import os
 
 # this script is combined with bash to produce lists of ignored files
@@ -46,14 +45,6 @@ elif sys.argv[1] == "black":
     for line in sys.stdin:
         if regex.match(line):
             print(line, end="")
-elif sys.argv[1] == "python-coverage":
-    # don't depend on system to interpret **
-    # so checking globs here against piped list
-    globs = project_toml()["tool"]["coverage"]["run"]["omit"]
-    for line in sys.stdin:
-        for glob in globs:
-            if fnmatch.fnmatch(line.strip(), glob):
-                print(line.strip())
 elif sys.argv[1] == "nyc":
     with open(".nycrc.json", "r") as f:
         print(" ".join(filter_exists(json.loads(f.read())["exclude"])))

@@ -12,8 +12,6 @@ message flake8
 find $(venv/bin/python check_ignore.py flake8) -type f | ./no-unignored.sh
 message black
 find . -type f | venv/bin/python check_ignore.py black | ./no-unignored.sh
-message python-coverage
-find . -type f | venv/bin/python check_ignore.py python-coverage | ./no-unignored.sh
 message bash-coverage
 find $(venv/bin/python check_ignore.py bash-coverage) -type f | ./no-unignored.sh
 message nyc

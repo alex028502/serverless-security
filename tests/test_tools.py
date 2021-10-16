@@ -4,12 +4,13 @@ import os
 import pytest
 
 
-def test_addresses(email_config):
+def test_addresses(email_config, component_env):
     directory, data = email_config
     settings_file_path = directory + "/settings.json"
     p = subprocess.Popen(
         ["python", "tools/addresses.py", settings_file_path],
         stdout=subprocess.PIPE,
+        env=dict(os.environ, **component_env),
     )
     names_from_tool = p.communicate()[0].decode("utf-8").strip().split("\n")
     names_from_fixture = [data["sender"]] + data["recipients"]

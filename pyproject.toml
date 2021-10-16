@@ -6,8 +6,7 @@ extend-exclude = '(^\./\.coverage|^\./\.target)'
 [tool.coverage.run]
 branch = true
 parallel = true
-include = ['./**/*', './*']
-omit = ['./venv/**/*', './.target/**/*', './node_modules/**/*', './gems/**/*']
+source = ['.', './tools']
 data_file = '.coverage/.coverage'
 
 [tool.coverage.html]
