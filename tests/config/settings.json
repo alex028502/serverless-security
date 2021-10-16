@@ -5,6 +5,10 @@
     "user": "",
     "password": ""
   },
+  "headers": {
+    "x-security-1": "security-1",
+    "x-security-2": "security-2"
+  },
   "recipients": [
     "tom@example.com",
     "steve@example.com"

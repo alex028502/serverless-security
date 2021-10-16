@@ -66,6 +66,10 @@ for line in get_input():
         # that does not exist for debugging
         data = MIMEText(filepath)
 
+    # add encrypted headers
+    for k, v in settings["headers"].items():
+        data[k] = v
+
     msg = email_encryptor.encrypt_message(
         profile, data, sender, recipients, subject
     )

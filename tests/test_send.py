@@ -143,6 +143,9 @@ def test(email_server, email_config, demo_keys, photos, component_env, sut):
     assert not decrypted_photo_msg.is_multipart()
     assert decrypted_photo_msg.get_content_type() == "image/jpeg"
     assert decrypted_photo_msg.get_filename() == "security.jpg"
+    for k, v in config["headers"].items():
+        assert decrypted_photo_msg.get(k) == v
+
     photocon = decrypted_photo_msg.get_content()
 
     # let's compare with bash this time!
