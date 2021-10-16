@@ -1,15 +1,14 @@
-from package import unit
+import importlib
+import sys
 
-# don't remember why I used to need this - I think the path
-# used to be more complicated
-# spec = importlib.util.spec_from_file_location(
-#     "package",
-#     "./package/__init__.py",
-# )
-# module = importlib.util.module_from_spec(spec)
-# spec.loader.exec_module(module)
-# sys.modules[spec.name] = module
-# spec.loader.exec_module(module)
+unit_path = sys.argv[1]
+
+unit_spec = importlib.util.spec_from_file_location(
+    "unit",
+    unit_path,
+)
+unit = importlib.util.module_from_spec(unit_spec)
+unit_spec.loader.exec_module(unit)
 
 # this is really a test - we only test the quiet case since the verbose case is
 # already covered by the rest tests... and we don't actually check the result
