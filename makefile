@@ -46,6 +46,7 @@ $(TEST_DIR)/images: makefile
 	mv $@.tmp $@
 deploy:
 	[ "${SECURITY_LIVE_TARGET}" != "" ] # if the path makes no sense we'll find out soon
+	timeout 10 ./tools/server-action/run.sh ${SECURITY_LIVE_TARGET} 'echo connected'
 	venv/bin/ansible-playbook playbook.yml --limit prod -v
 	./tools/server-action/run.sh ${SECURITY_LIVE_TARGET} 'sudo systemctl daemon-reload'
 	./tools/server-action/run.sh ${SECURITY_LIVE_TARGET} 'sudo service security restart'
