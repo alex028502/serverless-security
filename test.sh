@@ -16,6 +16,6 @@ venv/bin/python tools/server-action/test.py
 
 ./venv-run.sh $PWD/venv ./misc/be-quiet.sh $PWD/package/unit.py
 
-./check-ignore.sh
+./misc/check-ignore.sh
 
 venv/bin/python -m pytest tests -xv
