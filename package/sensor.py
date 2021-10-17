@@ -11,7 +11,7 @@ import importlib
 # https://stackoverflow.com/questions/66797668/module-importlib-has-no-attribute-util
 import importlib.util
 
-from gpiozero import Button, LED
+from sensor_pins import pir, led, relay
 
 sensor_timer_path = sys.argv[1]
 
@@ -22,15 +22,6 @@ sensor_timer_spec = importlib.util.spec_from_file_location(
 sensor_timer = importlib.util.module_from_spec(sensor_timer_spec)
 sensor_timer_spec.loader.exec_module(sensor_timer)
 
-pir = []
-pir.append(Button(16, pull_up=False))
-pir.append(Button(20, pull_up=False))
-
-led = []
-led.append(LED(19))
-led.append(LED(26))
-
-relay = LED(21)
 
 assert len(led) == len(pir)
 

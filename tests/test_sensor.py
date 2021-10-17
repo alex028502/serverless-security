@@ -59,3 +59,17 @@ def test(sensor_p, sleep_p):
     assert sensor_p.poll() is not echo_p.poll()
     assert sensor_p.poll() is not ls_p.poll()
     assert sensor_p.poll() is sleep_p.poll()
+
+
+# this test doesn't do much but let's just make sure we
+# don't do anythign to stop this useful test program from compiling
+# and running successfully
+def test_check_sensor_pins(bin_dir, sut):
+    p = subprocess.Popen(
+        ["%s/python" % bin_dir, "%s/check_sensor_pins.py" % sut, ".01"],
+        env=dict(os.environ, GPIOZERO_PIN_FACTORY="mock"),
+        stderr=subprocess.STDOUT,
+    )
+
+    p.communicate()
+    assert not p.returncode
