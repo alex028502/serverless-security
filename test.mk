@@ -75,7 +75,6 @@ e2e: compare-reqs deploy
 e2e-test:
 	. $(TARGET_DIR)/.env && [ "$$SECURITY_CAMERA_DEVS" = '/dev/video*' ]
 	. $(TARGET_DIR)/.env && [ "$$GPIOZERO_PIN_FACTORY" = $(LIVE_PIN_FACTORY) ]
-	grep $(LIVE_PIN_FACTORY) $(TARGET_DIR)/sensor.service
 	. $(TARGET_DIR)/.env && grep $${SECURITY_CAMERA_HOME} $(TARGET_DIR)/sensor.service
 	. $(TARGET_DIR)/.env && grep $${SECURITY_CAMERA_HOME} $(TARGET_DIR)/security.service
 	. $(TARGET_DIR)/.env && $(PY) tools/path_compare.py $${SECURITY_CAMERA_HOME} $(TARGET_DIR)

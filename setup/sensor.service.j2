@@ -3,8 +3,8 @@ Description=detect motion
 After=network.target
 
 [Service]
-Environment="GPIOZERO_PIN_FACTORY=native"
-ExecStart={{ security_camera_home }}/venv/bin/python package/sensor.py
+EnvironmentFile={{ security_camera_home }}/.env
+ExecStart={{ security_camera_home }}/package/sensor.sh
 WorkingDirectory={{ security_camera_home }}
 StandardOutput=inherit
 StandardError=inherit

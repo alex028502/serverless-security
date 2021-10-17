@@ -5,7 +5,7 @@ set -e
 ./tools/test.sh
 
 venv/bin/python unit.py
-GPIOZERO_PIN_FACTORY=mock venv/bin/python sensor.py
+GPIOZERO_PIN_FACTORY=mock venv/bin/python package/sensor.py misc/sensor_timer.py
 
 venv/bin/python tools/path_compare.py $PWD $PWD
 venv/bin/python tools/path_compare.py $PWD/tools ./tools
