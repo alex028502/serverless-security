@@ -22,29 +22,29 @@ sensor_timer_spec = importlib.util.spec_from_file_location(
 sensor_timer = importlib.util.module_from_spec(sensor_timer_spec)
 sensor_timer_spec.loader.exec_module(sensor_timer)
 
-sensor = []
-sensor.append(Button(16, pull_up=False))
-sensor.append(Button(20, pull_up=False))
+pir = []
+pir.append(Button(16, pull_up=False))
+pir.append(Button(20, pull_up=False))
 
-light = []
-light.append(LED(19))
-light.append(LED(26))
+led = []
+led.append(LED(19))
+led.append(LED(26))
 
-output = LED(21)
+relay = LED(21)
 
-assert len(light) == len(sensor)
+assert len(led) == len(pir)
 
-for i in sensor_timer.sensor_timer(sensor, light, output):
+for i in sensor_timer.sensor_timer(pir, led, relay):
     answers = ""
-    for idx in range(len(sensor)):
-        if sensor[idx].is_pressed:
-            light[idx].on()
+    for idx in range(len(pir)):
+        if pir[idx].is_pressed:
+            led[idx].on()
             answers += "X"
         else:
-            light[idx].off()
+            led[idx].off()
             answers += "O"
 
-    if answers == len(sensor) * "X":
-        output.off()
+    if answers == len(pir) * "X":
+        relay.off()
     else:
-        output.on()
+        relay.on()
