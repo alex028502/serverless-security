@@ -4,7 +4,7 @@ set -e
 
 ./tools/test.sh
 
-venv/bin/python unit.py
+venv/bin/python misc/unit.py package/unit.py
 
 venv/bin/python tools/path_compare.py $PWD $PWD
 venv/bin/python tools/path_compare.py $PWD/tools ./tools

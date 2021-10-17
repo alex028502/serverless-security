@@ -1,18 +1,13 @@
-# import importlib.util
-# import sys
+import importlib.util
 
 # thanks! https://stackoverflow.com/a/50395128
 # I hope one day I find out what all of this means!
-# spec = importlib.util.spec_from_file_location(
-#     "package",
-#     "./package/__init__.py",
-# )
-# module = importlib.util.module_from_spec(spec)
-# spec.loader.exec_module(module)
-# sys.modules[spec.name] = module
-# spec.loader.exec_module(module)
-
-from package import unit as sut
+spec = importlib.util.spec_from_file_location(
+    "unit",
+    "./package/unit.py",
+)
+sut = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(sut)
 
 # these tests are kind of contrived to cover stuff that's real tests can't
 # cover.  If I have to change one of these tests to make a change, it is a sign
