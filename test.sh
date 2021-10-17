@@ -14,7 +14,7 @@ tools/expect-failure.sh venv/bin/python tools/path_compare.py
 
 venv/bin/python tools/server-action/test.py
 
-./venv-run.sh $PWD/venv ./misc/be-quiet.sh $PWD/package/unit.py
+./tools/venv-run.sh $PWD/venv ./misc/be-quiet.sh $PWD/package/unit.py
 
 ./misc/check-ignore.sh
 

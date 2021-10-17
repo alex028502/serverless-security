@@ -85,6 +85,6 @@ source-check:
 	! find $(TARGET_DIR)/package -name '*.pyc' | grep . # thanks https://serverfault.com/a/225827
 	! find $(TARGET_DIR)/package -name '__pycache__' | grep .
 venv-check:
-	./venv-run.sh $(TARGET_DIR)/venv ./pip-freeze.sh | diff - $(TARGET_DIR)/requirements.txt
+	./tools/venv-run.sh $(TARGET_DIR)/venv ./tools/pip-freeze.sh | diff - $(TARGET_DIR)/requirements.txt
 redeploy:
 	venv/bin/ansible-playbook playbook.yml -vv -ltest
