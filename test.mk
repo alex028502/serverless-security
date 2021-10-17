@@ -25,7 +25,7 @@ test: checks
 	rm -f $(PY_COV_FILE)
 	bundle exec bashcov -- misc/check-check-install.sh
 	COVERAGE_PROCESS_START=.coveragerc node_modules/.bin/nyc bundle exec bashcov -- ./test.sh
-	COVERAGE_PROCESS_START=.coveragerc bundle exec bashcov -- ansible-test.sh $(TARGET_DIR)
+	COVERAGE_PROCESS_START=.coveragerc bundle exec bashcov -- misc/ansible-test.sh $(TARGET_DIR)
 	$(PY) -m coverage combine
 	$(PY) -m coverage report
 	$(PY) -m coverage html
