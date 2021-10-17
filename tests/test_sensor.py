@@ -64,6 +64,9 @@ def test(sensor_p, sleep_p):
 # this test doesn't do much but let's just make sure we
 # don't do anythign to stop this useful test program from compiling
 # and running successfully
+# if we ever feel like we really need to test this, then we can use the same
+# sensor timer as for the sensor program, and just check that no matter what
+# we set the inputs to the outputs follow the planned pattern
 def test_check_sensor_pins(bin_dir, sut):
     p = subprocess.Popen(
         ["%s/python" % bin_dir, "%s/check_sensor_pins.py" % sut, ".01"],
@@ -73,3 +76,38 @@ def test_check_sensor_pins(bin_dir, sut):
 
     p.communicate()
     assert not p.returncode
+
+
+def test_actions(bin_dir, sut, dirname):
+    test_cases = {
+        "oo": "001",
+        "oi": "011",
+        "ii": "110",
+        "io": "101",
+    }
+
+    # the third digit can be derived from the other two
+    # the output is low if both lights are high:
+    for vals in test_cases.values():
+        val = list(map(int, vals))
+        assert (val[0] and val[1]) == (not val[2])
+    # sending a low signal works out better than a high one because of the
+    # relay, and not wanting to take pictures when the sensor is off
+    # (I think)
+
+    test_input = "\n".join(test_cases.keys()) + "\n"
+    expected_output = "\n".join(test_cases.values()) + "\n"
+    p = subprocess.Popen(
+        [
+            "%s/python" % bin_dir,
+            "%s/sensor.py" % sut,
+            "%s/sensor_timer.py" % dirname,
+        ],
+        env=dict(os.environ, GPIOZERO_PIN_FACTORY="mock"),
+        close_fds=False,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+    )
+
+    output = p.communicate(input=test_input.encode("utf-8"))[0]
+    assert output.decode("utf-8") == expected_output
