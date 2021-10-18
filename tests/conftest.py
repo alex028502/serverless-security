@@ -113,7 +113,8 @@ def component_env(tmp_path, bin_dir, dirname, email_config):
     data.mkdir()
     return {
         # don't try to change the path like this in two places!
-        "PATH": "%s:%s/mock:%s" % (bin_dir, dirname, os.environ["PATH"]),
+        "PATH": "%s:%s/mock/fswebcam:%s"
+        % (bin_dir, dirname, os.environ["PATH"]),
         "_SECURITY_CAMERA_DATA": str(data),
         "_SECURITY_CAMERA_CONFIG": email_config[0],
         "GPIOZERO_PIN_FACTORY": "mock",
@@ -140,7 +141,8 @@ def main_env(tmp_path, bin_dir, dirname, email_config, photos, bad_device):
     devices = " ".join(photos + [bad_device])
 
     return {
-        "PATH": "%s/mock:%s" % (dirname, os.environ["PATH"]),  # be careful
+        "PATH": "%s/mock/fswebcam:%s"
+        % (dirname, os.environ["PATH"]),  # be careful
         "GPIOZERO_PIN_FACTORY": "mock",
         "SECURITY_CAMERA_HOME": str(tmp_path),
         "SECURITY_CAMERA_VENV": os.path.dirname(bin_dir),

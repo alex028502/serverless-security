@@ -54,7 +54,7 @@ def test_action_env(action_env):
     which_output = p.communicate()
     assert not p.returncode, which_output
     assert not which_output[1], which_output
-    assert mock_path + "/fswebcam" in which_output[0].decode("UTF-8")
+    assert mock_path + "/fswebcam/fswebcam" in which_output[0].decode("UTF-8")
 
 
 def test_filename(tmp_path, sut):
@@ -85,7 +85,7 @@ def test_filename(tmp_path, sut):
         assert name in filename
 
 
-exe_paths = ["./tests/mock/fswebcam", "fswebcam"]
+exe_paths = ["./tests/mock/fswebcam/fswebcam", "fswebcam"]
 
 
 @pytest.mark.parametrize("exe", exe_paths)

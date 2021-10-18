@@ -101,7 +101,7 @@ def test_actions(bin_dir, sut, dirname):
         [
             "%s/python" % bin_dir,
             "%s/sensor.py" % sut,
-            "%s/sensor_timer.py" % dirname,
+            "%s/mock/sensor_timer.py" % dirname,
         ],
         env=dict(os.environ, GPIOZERO_PIN_FACTORY="mock"),
         close_fds=False,

@@ -6,7 +6,7 @@ extend-exclude = '(^\./\.coverage|^\./\.target)'
 [tool.coverage.run]
 branch = true
 parallel = true
-source = ['.', './tools', './misc']
+source = ['.', './tools', './misc', './tests/mock']
 data_file = '.coverage/.coverage'
 
 [tool.coverage.html]
