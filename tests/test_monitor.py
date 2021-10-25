@@ -1,4 +1,3 @@
-import os
 import sys
 import subprocess
 import time
@@ -8,6 +7,7 @@ import pytest
 # this test is a cross between the email test and the monitor test!
 from .helpers.email import files_chrono, wait_for_message
 from .helpers.monitor import ctrl_key, wait_for_child_processes
+from .helpers.path import env_with_extended_path
 
 # this test is arguably redundant - it was written before the monitor test
 # program, and then I wrote the test program to figure it out.  I originally
@@ -17,10 +17,10 @@ from .helpers.monitor import ctrl_key, wait_for_child_processes
 
 
 @pytest.fixture()
-def monitor_env(component_env):
-    return dict(
-        component_env,
-        _SECURITY_CAMERA_DATA="",
+def monitor_env(plain_env, exe_path):
+    return env_with_extended_path(
+        dict(plain_env, _SECURITY_CAMERA_DATA="", GPIOZERO_PIN_FACTORY="mock"),
+        exe_path["python"],
     )
 
 
@@ -35,7 +35,7 @@ def monitor_process(email_server, monitor_env, sut):
         "tester",
         "hello",
     ]
-    env = dict(os.environ, DELAY_AFTER_MAIL="0.5", **monitor_env)
+    env = dict(monitor_env, DELAY_AFTER_MAIL="0.5")
     p = subprocess.Popen(
         ["python", "-u", "%s/monitor.py" % sut] + mail_command,
         # preexec_fn=os.setsid,
@@ -49,7 +49,7 @@ def monitor_process(email_server, monitor_env, sut):
     time.sleep(0.5)
 
 
-def test(monitor_process):
+def test(plain_env, monitor_process):
     p, messages_folder, mail_command = monitor_process
     assert not len(files_chrono(messages_folder))
     # first just try the mail command
@@ -58,6 +58,7 @@ def test(monitor_process):
         mail_command,
         close_fds=False,
         stderr=subprocess.STDOUT,
+        env=plain_env,
     ).communicate()
     wait_for_message(messages_folder, 1, 4)
     ctrl_key(p, "\\")

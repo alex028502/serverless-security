@@ -5,13 +5,17 @@ import time
 import pytest
 
 from .helpers.monitor import ctrl_key
+from .helpers.path import env_with_extended_path
 
 
 @pytest.fixture()
-def monitor_mkdir_process(component_env, sut, tmp_path):
+def monitor_mkdir_process(plain_env, sut, tmp_path, exe_path):
     tmp_dirname = "%s/sample-directory" % tmp_path
-    env = dict(os.environ, **component_env)
     command = ["mkdir", tmp_dirname]  # never put -p; should fail if exists
+    env = dict(
+        env_with_extended_path(plain_env, exe_path["python"]),
+        GPIOZERO_PIN_FACTORY="mock",
+    )
     p = subprocess.Popen(
         ["python", "-u", "%s/monitor.py" % sut] + command,
         # preexec_fn=os.setsid,

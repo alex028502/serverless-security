@@ -1,3 +1,5 @@
 [flake8]
 exclude = .git,node_modules,venv,gems,coverage,.target
 max-line-length = 80
+# https://github.com/github/super-linter/issues/709
+extend-ignore = E203

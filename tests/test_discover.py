@@ -3,18 +3,26 @@ import os
 
 import pytest
 
+from .helpers.path import env_with_extended_path
 
-@pytest.mark.parametrize("case", ["forwards", "backwards"])
-def test(component_env, sut, photos, bad_device, case):
+
+@pytest.fixture()
+def component_env(plain_env, exe_path, action_env_vars):
+    return env_with_extended_path(
+        dict(plain_env, **action_env_vars), exe_path["fswebcam"]
+    )
+
+
+@pytest.mark.parametrize("backwards", list(range(2)))
+def test(component_env, sut, photos, bad_device, backwards):
     # let's test it in different orders to make sure that our set comparison
     # works and so that we always test with a good image last once and make
     # sure that the temp file is cleaned up properly
     all_devices = [bad_device] + photos
-    if case == "backwards":
+    if backwards:
         all_devices.reverse()
         assert all_devices[0] != bad_device
     else:
-        assert case == "forwards"
         assert all_devices[0] == bad_device
 
     env = dict(component_env, SECURITY_CAMERA_DEVS=" ".join(all_devices))
