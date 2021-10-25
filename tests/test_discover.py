@@ -3,6 +3,15 @@ import os
 
 import pytest
 
+from .helpers.path import env_with_extended_path
+
+
+@pytest.fixture()
+def component_env(plain_env, exe_path, action_env_vars):
+    return env_with_extended_path(
+        dict(plain_env, **action_env_vars), exe_path["fswebcam"]
+    )
+
 
 @pytest.mark.parametrize("backwards", list(range(2)))
 def test(component_env, sut, photos, bad_device, backwards):
