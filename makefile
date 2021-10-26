@@ -12,9 +12,16 @@ PY=venv/bin/python
 PUB=public-key-1.asc
 PRI=private-key-1.asc
 
+# this file and test.mk are where I put any code that is not being covered by
+# automated tests. That keeps it to a minimum.  I also learned the hard way that
+# bashcov (https://github.com/infertux/bashcov) gets confused if a `makefile`
+# is called inside the bashcov process.  So it worked out well to use `makefile`
+# for the entry points where coverage is set up, and deployment tasks that I
+# don't know how to test, and use bash for stuff that I can test.
+
 .PHONY: install $(COV_DIR)/index.html test e2e
 install:
-	./sysreq.sh
+	./sysrq.sh
 	python3 -m venv venv
 	venv/bin/pip install -r requirements.txt
 	./check-install.sh

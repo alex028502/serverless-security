@@ -30,3 +30,14 @@
       template: src=setup/sensor.service.j2 dest={{ security_camera_home }}/sensor.service
     - name: Data directory if it does not exist
       file: path={{ security_camera_home }}/data state=directory
+
+# This playbook mainly only includes stuff that needs to be done on every
+# deployment and doesn't include anything that can't be tested by deploying to
+# a local directory, so doesn't install any system dependencies. Not exactly
+# how they intendend ansible to be used.
+
+# Instead of putting the ansible stuff in a directory, it worked better to put
+# the executable files in a directory, since ansible needs to know that the
+# files exist, but they don't really need to know ansible exists. Also, the
+# main thing this project does is install something on a raspberry pi, so this
+# it made sense to make the ansible files "first class citizens"

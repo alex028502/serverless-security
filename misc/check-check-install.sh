@@ -13,23 +13,23 @@ set -e
 # when this fails, it is going to be hard to find the failure - and we can't
 # use -x with bashcov either
 
-sysreq=tools/sysreq.sh
+sysrq=tools/sysrq.sh
 remove_comments=tools/remove-comments.sh
 
-ls $sysreq > /dev/null
+ls $sysrq > /dev/null
 ls $remove_comments > /dev/null
 ./tools/expect-failure.sh $remove_comments
-./tools/expect-failure.sh $sysreq
-./tools/expect-failure.sh $sysreq program-does-not-exist
-./tools/expect-failure.sh $sysreq program-does not-exist
+./tools/expect-failure.sh $sysrq
+./tools/expect-failure.sh $sysrq program-does-not-exist
+./tools/expect-failure.sh $sysrq program-does not-exist
 
 # now run each of the tools successfully
 # this is done earlier as well, but here we do it when we can check coverage
 
-./sysreq.sh
+./sysrq.sh
 
 echo the above script uses the stuff we tested in this file:
-grep $sysreq ./sysreq.sh
-grep $remove_comments ./sysreq.sh
+grep $sysrq ./sysrq.sh
+grep $remove_comments ./sysrq.sh
 
 ./check-install.sh

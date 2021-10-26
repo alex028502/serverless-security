@@ -3,6 +3,17 @@ from base64 import b64encode
 from autocrypt import message as autocrypt_message
 from autocrypt import constants as autocrypt_constants
 
+# https://github.com/juga0/pyac formats the email in a way that works with
+# https://delta.chat - which is fantastic. I tried using delta.chat's rust
+# library, but I was in over my head. The problem with autocrypt/pyac
+# is that the version that worked isn't published to pypi. Pip can get the
+# library straight from github, but pip freeze doesn't work, so I have had to
+# create my own pip freeze wrapper (../tools/pip-freeze.sh). Also, it could
+# disappear from github. I have cloend it just in case. What I would like to do
+# is copy  this library into my project, and then use test coverage to delete
+# everything unused and then inline the rest, and learn something about how it
+# works. This way I could also remove the pip freeze wrapper
+
 
 def getkey(conf_dir, address, kind):
     path = "%s/keys/%s/%s-key-1.asc" % (conf_dir, address, kind)

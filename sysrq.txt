@@ -1,5 +1,5 @@
 # sudo apt-get install python3-dev
-ruby # sudo apt-get install ruby 
+ruby # sudo apt-get install ruby
 # sudo apt-get install ruby-dev
 bundle # sudo gem install bundler
 jq
