@@ -72,13 +72,14 @@ e2e: compare-reqs deploy
 	$(MAKE) -f $(MAKEFILE_LIST) source-check
 	$(MAKE) -f $(MAKEFILE_LIST) venv-check
 	$(MAKE) -f $(MAKEFILE_LIST) e2e-test
-e2e-test:
+config-test:
 	. $(TARGET_DIR)/.env && [ "$$SECURITY_CAMERA_DEVS" = '/dev/video*' ]
 	. $(TARGET_DIR)/.env && [ "$$GPIOZERO_PIN_FACTORY" = $(LIVE_PIN_FACTORY) ]
 	. $(TARGET_DIR)/.env && grep $${SECURITY_CAMERA_HOME} $(TARGET_DIR)/sensor.service
 	. $(TARGET_DIR)/.env && grep $${SECURITY_CAMERA_HOME} $(TARGET_DIR)/security.service
 	. $(TARGET_DIR)/.env && $(PY) tools/path_compare.py $${SECURITY_CAMERA_HOME} $(TARGET_DIR)
 	. $(TARGET_DIR)/.env && $(PY) tools/path_compare.py $${SECURITY_CAMERA_VENV} $(TARGET_VENV)
+e2e-test: config-test
 	$(PY) -m pytest --sut=$(TARGET_DIR)/package --interpreter=$(TARGET_VENV)/bin/python -vvx
 source-check:
 	diff $(TARGET_DIR)/package package --exclude __pycache__ --exclude '*.pyc'
