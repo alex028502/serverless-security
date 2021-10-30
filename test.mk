@@ -76,10 +76,24 @@ e2e: compare-reqs deploy
 config-test:
 	. $(ENV_FILE) && [ "$$SECURITY_CAMERA_DEVS" = '/dev/video*' ]
 	. $(ENV_FILE) && [ "$$GPIOZERO_PIN_FACTORY" = $(LIVE_PIN_FACTORY) ]
-	. $(ENV_FILE) && grep $${SECURITY_CAMERA_HOME} $(TARGET_DIR)/sensor.service
-	. $(ENV_FILE) && grep $${SECURITY_CAMERA_HOME} $(TARGET_DIR)/security.service
-	. $(ENV_FILE) && $(PY) tools/path_compare.py $${SECURITY_CAMERA_HOME} $(TARGET_DIR)
-	. $(ENV_FILE) && $(PY) tools/path_compare.py $${SECURITY_CAMERA_VENV} $(TARGET_VENV)
+	$(PY) tools/service_value.py $(TARGET_DIR)/sensor.service Service EnvironmentFile \
+		| xargs $(PY) ./tools/path_compare.py $(ENV_FILE)
+	$(PY) tools/service_value.py $(TARGET_DIR)/sensor.service Service ExecStart \
+		| xargs $(PY) ./tools/path_compare.py $(TARGET_DIR)/package/sensor.sh
+	$(PY) tools/service_value.py $(TARGET_DIR)/sensor.service Service WorkingDirectory \
+		| xargs $(PY) ./tools/path_compare.py $(TARGET_DIR)
+	$(PY) tools/service_value.py $(TARGET_DIR)/sensor.service Service User \
+		| xargs ./tools/assert.sh pi ==
+	$(PY) tools/service_value.py $(TARGET_DIR)/sensor.service Unit Description \
+		| xargs -I {} ./tools/assert.sh "detect motion" == "{}"
+	$(PY) tools/service_value.py $(TARGET_DIR)/security.service Service EnvironmentFile \
+		| xargs $(PY) ./tools/path_compare.py $(ENV_FILE)
+	$(PY) tools/service_value.py $(TARGET_DIR)/security.service Service ExecStart \
+		| xargs $(PY) ./tools/path_compare.py $(TARGET_DIR)/package/service.sh
+	$(PY) tools/service_value.py $(TARGET_DIR)/security.service Service WorkingDirectory \
+		| xargs $(PY) ./tools/path_compare.py $(TARGET_DIR)
+	$(PY) tools/service_value.py $(TARGET_DIR)/security.service Unit Description \
+		| xargs -I {} ./tools/assert.sh "wait for motion" == "{}"
 e2e-test: config-test
 	$(PY) -m pytest --sut=$(TARGET_DIR)/package --interpreter=$(TARGET_VENV)/bin/python -vvx
 source-check:
