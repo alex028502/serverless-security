@@ -24,6 +24,7 @@ fi
 
 shift
 
+sleep 0.1
 cp -v $@
 
 # that would be way more awesome to use
