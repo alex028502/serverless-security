@@ -130,9 +130,6 @@ def test(service, demo_keys, main_env, photos, email_config, alert):
     # now let's just show how we have also saved all these pictures to disk
     # or maybe we should move this to the batch test - since it's not that
     # important for the end result
-    all_pictures_taken = files_chrono(
-        main_env["SECURITY_CAMERA_HOME"] + "/data"
-    )
     number_of_batches = len(files_chrono(messages_folder)) / batch_size
     expected_pictures_taken = number_of_batches * (batch_size - 1)
     assert len(all_pictures_taken) == expected_pictures_taken
