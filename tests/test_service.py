@@ -99,6 +99,7 @@ def test(service, demo_keys, main_env, photos, email_config, alert):
             main_env["SECURITY_CAMERA_HOME"] + "/data"
         )
 
+        print(all_pictures_taken)
         for photo_key in range(len(photos)):
             compressed_msg = decrypted_msgs[1 + photo_key]
             full_photo_msg = decrypted_msgs[1 + len(photos) + photo_key]
@@ -121,7 +122,6 @@ def test(service, demo_keys, main_env, photos, email_config, alert):
             assert preview_outbox_idx == full_outbox_idx + len(photos)
             preview_in_outbox = all_pictures_taken[preview_outbox_idx]
             full_in_outbox = all_pictures_taken[full_outbox_idx]
-            print(all_pictures_taken)
             assert "preview" in os.path.basename(preview_in_outbox)
             assert "preview" not in os.path.basename(full_in_outbox)
             assert not compare_content_to_path(compressed, preview_in_outbox)
