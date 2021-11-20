@@ -16,8 +16,8 @@ ls $_SECURITY_CAMERA_DATA > /dev/null
 for device in $SECURITY_CAMERA_DEVS
 do
   echo DEVICE is $device >&2
-  tstamp=$(date +%s)
-  filepath=$(./filename.sh $_SECURITY_CAMERA_DATA $tstamp jpg)
+  tstamp=$(date +%s.%N)
+  filepath=$_SECURITY_CAMERA_DATA/$tstamp.jpg
   message trying to capture $filepath with $device
   fswebcam --device $device $filepath 1>&2 || message failure?
   if ls $filepath # this is the only stdout this produces
