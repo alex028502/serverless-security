@@ -49,7 +49,6 @@ def test_action_env(action_env):
     assert mock_path + "/fswebcam/fswebcam" in which_output[0].decode("UTF-8")
 
 
-
 exe_paths = ["./tests/mock/fswebcam/fswebcam", "fswebcam"]
 
 
