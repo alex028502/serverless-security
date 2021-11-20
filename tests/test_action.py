@@ -53,8 +53,9 @@ def test_filename(tmp_path, sut):
     name = "test%s" % (int(time.time()) % 10)
     ext = "xx%s" % ((int(time.time()) % 2) + 1)  # 1 or 2 I think
     program = ["%s/filename.sh" % sut, str(tmp_path), name, ext]
-    number_of_files = 3
+    number_of_files = 100
     for i in range(number_of_files):
+        assert i < number_of_files / 2, str(tmp_path)  # not using whole range
         p = subprocess.Popen(
             program,
             close_fds=False,
@@ -62,6 +63,11 @@ def test_filename(tmp_path, sut):
             stderr=subprocess.PIPE,
         )
         output = p.communicate()
+        if p.returncode:
+            assert p.returncode == 1
+            assert output[0] == b""
+            assert b"no filenames left" in output[1]
+            break
         assert output[1] == b"", "iteration %s" % i
         assert not p.returncode, output
         filename = output[0].strip()
@@ -70,7 +76,7 @@ def test_filename(tmp_path, sut):
         assert os.path.isfile(filename), "iteration %s" % i
 
     files = files_chrono(str(tmp_path))
-    assert len(files) == number_of_files, files
+    assert len(files) > 8  # we are going to need up to 8 filenames per second
     assert "0000" in files[0]  # not really a requirement
     for filename in files:
         assert ext in filename

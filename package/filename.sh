@@ -16,7 +16,9 @@ extension=$3
 # makes it a little more testable since we can always create a repeat by
 # running it twice
 
-for i in $(seq -f '%00005.0f' 0 99999)
+# padding the filenames with lots of digits even though we only allow
+# ten per series - to make it possible to test this
+for i in $(seq -f '%00005.0f' 0 9)
 do
   path=$directory/$name.$i.$extension
   if ! ls $path > /dev/null 2>&1
