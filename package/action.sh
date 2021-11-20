@@ -17,6 +17,7 @@ for device in $SECURITY_CAMERA_DEVS
 do
   echo DEVICE is $device >&2
   tstamp=$(date +%s)
+  # TODO: just use date +%s-%N and stop checking filename?
   filepath=$(./filename.sh $_SECURITY_CAMERA_DATA $tstamp jpg)
   message trying to capture $filepath with $device
   fswebcam --device $device $filepath 1>&2 || message failure?

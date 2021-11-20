@@ -100,6 +100,17 @@ def test(service, demo_keys, main_env, photos, email_config, alert):
         )
 
         print(all_pictures_taken)
+
+        full_pictures = []
+        previews = []
+        for pic in all_pictures_taken:
+            if "preview" in os.path.basename(pic):
+                previews.append(pic)
+            else:
+                full_pictures.append(pic)
+
+        assert len(previews) == len(full_pictures)
+
         for photo_key in range(len(photos)):
             compressed_msg = decrypted_msgs[1 + photo_key]
             full_photo_msg = decrypted_msgs[1 + len(photos) + photo_key]
@@ -117,13 +128,20 @@ def test(service, demo_keys, main_env, photos, email_config, alert):
             # some of the possible issues
             # here is a gotcha - even though the previews get into the inbox
             # first, they are created after the full size images
-            full_outbox_idx = batch_key * 2 * len(photos) + photo_key
-            preview_outbox_idx = (batch_key * 2 + 1) * len(photos) + photo_key
-            assert preview_outbox_idx == full_outbox_idx + len(photos)
-            preview_in_outbox = all_pictures_taken[preview_outbox_idx]
-            full_in_outbox = all_pictures_taken[full_outbox_idx]
+            # actually here is another gotcha - the filename sorting
+            # which it falls back on if the times are the same, which seems
+            # to happen when they are created too fast, is different on
+            # different computers, because it is what we get back from listing
+            # the files, so now we just separate them
+            outbox_idx = batch_key * len(photos) + photo_key
+            preview_in_outbox = previews[outbox_idx]
+            full_in_outbox = full_pictures[outbox_idx]
             assert "preview" in os.path.basename(preview_in_outbox)
             assert "preview" not in os.path.basename(full_in_outbox)
+            # the above is obvious now that we sort them but
+            assert os.path.basename(preview_in_outbox).replace(
+                ".preview.jpg", ""
+            ) == os.path.basename(full_in_outbox)
             assert not compare_content_to_path(compressed, preview_in_outbox)
             assert not compare_content_to_path(full_photo, full_in_outbox)
 
@@ -133,22 +151,25 @@ def test(service, demo_keys, main_env, photos, email_config, alert):
     number_of_batches = len(files_chrono(messages_folder)) / batch_size
     expected_pictures_taken = number_of_batches * (batch_size - 1)
     assert len(all_pictures_taken) == expected_pictures_taken
+    # we are using these now instead:
+    assert len(previews) + len(full_pictures) == expected_pictures_taken
 
     # actually - let's just check this now - why not!?
-    examples = zip(all_pictures_taken, photos * int(number_of_batches * 2))
-    for saved_pic, original in examples:
-        if "preview" in os.path.basename(saved_pic):
-            # use the fake size method to find out the real size
-            # sorry about that
-            assert photo_fake_size(saved_pic) == "128x128"
-            # because we are using real convert we can't check that the
-            # preview looks like it should without doing something more
-            # sophisticated
-            assert photo_relationship(saved_pic, original) == "different image"
-        else:
-            assert "x" in photo_fake_size(saved_pic)
-            assert photo_fake_size(saved_pic) != "128x128"
-            assert photo_relationship(saved_pic, original) == "identical files"
+    preview_examples = zip(previews, photos * int(number_of_batches))
+    full_examples = zip(full_pictures, photos * int(number_of_batches))
+    for saved_pic, original in preview_examples:
+        # use the fake size method to find out the real size
+        # sorry about that
+        assert photo_fake_size(saved_pic) == "128x128"
+        # because we are using real convert we can't check that the
+        # preview looks like it should without doing something more
+        # sophisticated
+        assert photo_relationship(saved_pic, original) == "different image"
+
+    for saved_pic, original in full_examples:
+        assert "x" in photo_fake_size(saved_pic)
+        assert photo_fake_size(saved_pic) != "128x128"
+        assert photo_relationship(saved_pic, original) == "identical files"
 
     for i in range(len(messages)):
         # finally let's try to open every message as an outsider
