@@ -49,6 +49,32 @@ def monitor_process(email_server, monitor_env, sut):
     time.sleep(0.5)
 
 
+@pytest.fixture()
+def monitor_process_stdout(monitor_env, sut, dirname, tmp_path):
+    # thanks https://stackoverflow.com/a/7389473
+    logpath = "%s/output.log" % tmp_path
+    log = open(logpath, "a")
+    action_word = "action!"
+    p = subprocess.Popen(
+        [
+            "python",
+            "-u",
+            "%s/monitor.py" % sut,
+            "%s/mock/action.sh" % dirname,
+            "3",
+            action_word,
+        ],
+        # preexec_fn=os.setsid,
+        env=monitor_env,
+        close_fds=False,
+        stdout=log,
+    )
+    time.sleep(1)
+    yield p, logpath, action_word
+    ctrl_key(p, "c")
+    time.sleep(0.5)
+
+
 def test(plain_env, monitor_process):
     p, messages_folder, mail_command = monitor_process
     assert not len(files_chrono(messages_folder))
@@ -77,3 +103,36 @@ def test(plain_env, monitor_process):
     assert last_message.strip() == message.strip()
     time.sleep(0.1)
     wait_for_child_processes(p, 0)
+
+
+# TODO: now that we are testing with stdout, delete email test above?
+def test_indicator(sut, dirname, monitor_process_stdout):
+    # instead of checking the actions through email, we are checking stdout
+    # originally tried to avoid this, but now we need to check that the
+    # indicator light is on, so might as well also check the action
+    # to look at stdout while the process is running, just send it to a file
+    # and read the file
+    p, logfilepath, action_word = monitor_process_stdout
+    time.sleep(3)
+    # it's gonna be hard to find the information I am looking for in this log
+    # in a meaningful way without just pasting the answer into the test
+    wait_for_child_processes(p, 0)
+    with open(logfilepath, "r") as f:
+        initial_output = f.read()
+        assert "listening to gpio here: mock" in initial_output
+        print(initial_output)  # for debug
+        for i in range(2):
+            # the only reason we really run this twice is to check that the
+            # indicator light turns off again
+            ctrl_key(p, "\\")
+            wait_for_child_processes(p, 1)
+            wait_for_child_processes(p, 0)
+            assert f.readline().strip() == "simulating motion", i
+            assert f.readline().strip() == "indicator state: 0"
+            assert f.readline().strip() == "indicator state: 0"
+            assert f.readline().strip() == "motion detected"
+            assert "kicked off" in f.readline()
+            assert f.readline().strip() == "start %s" % action_word
+            assert f.readline().strip() == "indicator state: 1"
+            assert f.readline().strip() == "done %s" % action_word
+            assert f.readline().strip() == "done monitor action"

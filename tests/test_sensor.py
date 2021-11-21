@@ -91,9 +91,8 @@ def test_actions(bin_dir, sut, dirname):
     for vals in test_cases.values():
         val = list(map(int, vals))
         assert (val[0] and val[1]) == (not val[2])
-    # sending a low signal works out better than a high one because of the
-    # relay, and not wanting to take pictures when the sensor is off
-    # (I think)
+    # the input button is set to pull_up=True
+    # so we can press the button with a low signal
 
     test_input = "\n".join(test_cases.keys()) + "\n"
     expected_output = "\n".join(test_cases.values()) + "\n"
