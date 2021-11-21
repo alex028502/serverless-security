@@ -19,7 +19,7 @@ from .helpers.path import env_with_extended_path
 @pytest.fixture()
 def monitor_env(plain_env, exe_path):
     return env_with_extended_path(
-        dict(plain_env, _SECURITY_CAMERA_DATA="", GPIOZERO_PIN_FACTORY="mock"),
+        dict(plain_env, GPIOZERO_PIN_FACTORY="mock"),
         exe_path["python"],
     )
 
