@@ -83,6 +83,16 @@ def test_happy(
     )
     assert not returncode
     received_messages = files_chrono(messages_folder)
+    print("check for duplicate timestamps or wrong number of items")
+    subprocess.run(
+        ["ls", "--full-time", str(messages_folder)],
+        check=True,
+    )
+
+    subprocess.run(
+        ["ls", "--full-time", env["_SECURITY_CAMERA_DATA"]],
+        check=True,
+    )
 
     if mode == MOTION:
         expected_messages = (
