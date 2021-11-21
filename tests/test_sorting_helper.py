@@ -30,6 +30,9 @@ def test(tmp_path, file_names):
     # thanks https://stackoverflow.com/a/17182670
     print("starttime %s" % time.time())
     for c in file_names:
+        # the problem seems to be from create two files in the same nanosecond
+        # which seems to not be possible on my desktop, but is possible on ci
+        time.sleep(0.000000002)  # do not delete based on test passing locally
         subprocess.run(
             ["touch", "%s/%s" % (tmp_path, c)],
             check=True,
