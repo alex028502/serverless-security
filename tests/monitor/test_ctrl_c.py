@@ -1,7 +1,7 @@
 import subprocess
 import time
 
-from .helpers.monitor import ctrl_key
+from .helpers import ctrl_key
 
 
 def search_processes(identifier):

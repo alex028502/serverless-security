@@ -4,7 +4,7 @@ import time
 
 import pytest
 
-from .helpers.monitor import ctrl_key
+from .monitor.helpers import ctrl_key
 
 # here we just prove that the wrapper injector script
 # runs - we can't do anything to the mock pins

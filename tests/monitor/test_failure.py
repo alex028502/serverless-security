@@ -4,8 +4,8 @@ import time
 
 import pytest
 
-from .helpers.monitor import ctrl_key
-from .helpers.path import env_with_extended_path
+from .helpers import ctrl_key
+from ..helpers.path import env_with_extended_path
 
 
 @pytest.fixture()

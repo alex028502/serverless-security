@@ -4,9 +4,10 @@ import time
 
 import pytest
 
-from .helpers.monitor import ctrl_key
 
-# this tests the script monitor.sh that is in the project root for manually
+from .helpers import ctrl_key
+
+# this helps test the script monitor.sh that is in the project root for manually
 # testing the monitor script.  the script works in mock mode and native mode
 # if you are on a raspberry pi 4 as a desktop, or run it on the target system
 # and watch it on ssh
@@ -15,16 +16,6 @@ from .helpers.monitor import ctrl_key
 def file_content(path):
     with open(path, "r") as file:
         return file.read()
-
-
-def wait_for_count_in_file(string, path, expected, limit):
-    start_time = time.time()
-    while True:
-        actual = file_content(path).count(string)
-        if actual == expected:
-            break
-        assert time.time() - start_time < limit, (actual, file_content(path))
-        time.sleep(0.1)
 
 
 @pytest.fixture()
@@ -57,7 +48,11 @@ def monitor_demo_process(monitor_demo_script, main_env, tmp_path, log):
     yield p, log_file_path, ready_code, action_code
 
     ctrl_key(p, "c")
-
+    logpath = log_file_path  # TODO: inline
+    subprocess.run(
+        ["cat", logpath],
+        check=True,
+    )
     time.sleep(0.1)
 
 
@@ -70,25 +65,3 @@ def monitor_demo_ready(monitor_demo_process):
         time.sleep(0.1)
 
     return p, log_file_path, action_code
-
-
-def test_the_file(monitor_demo_script):
-    path, ready_code, action_code = monitor_demo_script
-    with open(path) as file:
-        assert action_code in file.read()
-    # start code is harder to test
-    # so we'll find out the hard way if we change it!
-
-
-def test_the_process(monitor_demo_ready):
-    p, log_file_path, action_code = monitor_demo_ready
-    initial_content = file_content(log_file_path)
-    assert action_code in initial_content, "one at start"
-    assert initial_content.count(action_code) == 1, initial_content
-    print("first try")
-    ctrl_key(p, "\\")
-    wait_for_count_in_file(action_code, log_file_path, 2, 3)
-    time.sleep(0.1)
-    print("second try")
-    ctrl_key(p, "\\")
-    wait_for_count_in_file(action_code, log_file_path, 3, 3)

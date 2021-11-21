@@ -5,7 +5,7 @@ import os
 import pytest
 
 from .helpers.email import files_chrono, wait_for_message
-from .helpers.monitor import ctrl_key, wait_for_child_processes
+from .monitor.helpers import ctrl_key
 from .helpers.send import (
     message_from_file,
     assert_format,
@@ -47,7 +47,6 @@ def test(service, demo_keys, main_env, photos, email_config, alert):
     keys_dir, stranger_address = demo_keys
     p, messages_folder = service
     assert not len(files_chrono(messages_folder))
-    normal_state = 1
     picture_name = "security.jpg"
     assert "alert" in alert
     # every batch should have the same stuff in it
@@ -58,10 +57,8 @@ def test(service, demo_keys, main_env, photos, email_config, alert):
     for batch_key in range(0, 3):
         offset = len(files_chrono(messages_folder))
         assert offset == batch_key * batch_size
-        wait_for_child_processes(p, normal_state)
         ctrl_key(p, "\\")
         wait_for_message(messages_folder, offset + batch_size, 6)
-        wait_for_child_processes(p, normal_state)
         messages = files_chrono(messages_folder)
         print(messages)
         batch = messages[offset:]

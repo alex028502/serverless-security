@@ -1,64 +1,38 @@
-import subprocess
 import time
 
-import pytest
-
-# this test is arguably redundant - it was written before the monitor test
-# and now I accidentally put the indicator test in here
-
-from .helpers.monitor import ctrl_key, wait_for_child_processes
-from .helpers.path import env_with_extended_path
+import psutil
 
 
-@pytest.fixture()
-def monitor_env(plain_env, exe_path):
-    return env_with_extended_path(
-        dict(plain_env, GPIOZERO_PIN_FACTORY="mock"),
-        exe_path["python"],
-    )
+from .helpers import ctrl_key, wait_for_child_processes
+
+# this tests the script monitor.sh that is in the project root for manually
+# testing the monitor script.  the script works in mock mode and native mode
+# if you are on a raspberry pi 4 as a desktop, or run it on the target system
+# and watch it on ssh
 
 
-@pytest.fixture()
-def monitor_process(monitor_env, sut, dirname, tmp_path):
-    # thanks https://stackoverflow.com/a/7389473
-    logpath = "%s/output.log" % tmp_path
-    log = open(logpath, "a")
-    action_word = "action!"
-    p = subprocess.Popen(
-        [
-            "python",
-            "-u",
-            "%s/monitor.py" % sut,
-            "%s/mock/action.sh" % dirname,
-            "3",
-            action_word,
-        ],
-        # preexec_fn=os.setsid,
-        env=monitor_env,
-        close_fds=False,
-        stdout=log,
-    )
-    time.sleep(1)
-    yield p, logpath, action_word
-    ctrl_key(p, "c")
-    subprocess.run(
-        ["cat", logpath],
-        check=True,
-    )
-    time.sleep(0.5)
+def test_the_file(monitor_demo_script):
+    path, ready_code, action_code = monitor_demo_script
+    with open(path) as file:
+        assert action_code in file.read()
+    # start code is harder to test
+    # so we'll find out the hard way if we change it!
 
 
-def test(sut, dirname, monitor_process):
+def test_indicator(sut, dirname, monitor_demo_ready):
+    monitor_process = monitor_demo_ready
     # instead of checking the actions through email, we are checking stdout
     # originally tried to avoid this, but now we need to check that the
     # indicator light is on, so might as well also check the action
     # to look at stdout while the process is running, just send it to a file
     # and read the file
     p, logfilepath, action_word = monitor_process
+    # small correction for waiting for child process
+    cp = psutil.Process(p.pid).children()[0]
     time.sleep(3)
     # it's gonna be hard to find the information I am looking for in this log
     # in a meaningful way without just pasting the answer into the test
-    wait_for_child_processes(p, 0)
+    wait_for_child_processes(cp, 0)
     with open(logfilepath, "r") as f:
         initial_output = f.read()
         assert "listening to gpio here: mock" in initial_output
@@ -67,8 +41,8 @@ def test(sut, dirname, monitor_process):
             # the only reason we really run this twice is to check that the
             # indicator light turns off again
             ctrl_key(p, "\\")
-            wait_for_child_processes(p, 1)
-            wait_for_child_processes(p, 0)
+            wait_for_child_processes(cp, 1)
+            wait_for_child_processes(cp, 0)
             assert f.readline().strip() == "simulating motion", i
             assert f.readline().strip() == "indicator state: 0"
             assert f.readline().strip() == "indicator state: 0"
