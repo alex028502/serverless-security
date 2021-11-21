@@ -33,4 +33,5 @@ then
   conf-error $@
 fi
 
+sleep 0.01
 cat $1 | exiftool -Comment="size $3" - > $4
