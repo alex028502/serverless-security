@@ -1,6 +1,7 @@
 import subprocess
 import uuid
 import os
+import sys
 
 import pytest
 
@@ -9,7 +10,7 @@ from .helpers.fixtures import made_up_path
 
 
 def simple_message(*args):
-    subprocess.run(["python", "tools/mail.py"] + list(args), check=True)
+    subprocess.run([sys.executable, "tools/mail.py"] + list(args), check=True)
 
 
 @pytest.mark.parametrize("split", [False, True])

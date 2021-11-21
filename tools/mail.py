@@ -5,8 +5,7 @@ import smtplib
 import time
 
 # sends a one line phrase to our internal smtp server
-# is used both to test smtp server, and since we have it anyway, to receive
-# updates from the test process run by monitor.py
+# is used to test smtp server
 
 host = sys.argv[1]
 port = int(sys.argv[2])
