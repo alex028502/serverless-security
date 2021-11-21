@@ -89,6 +89,11 @@ def test_happy(
         check=True,
     )
 
+    subprocess.run(
+        ["ls", "--full-time", env["_SECURITY_CAMERA_DATA"]],
+        check=True,
+    )
+
     if mode == MOTION:
         expected_messages = (
             ["security alert!"]
