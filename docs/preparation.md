@@ -204,28 +204,26 @@ https://howchoo.com/g/ndy1zte2yjn/how-to-set-up-wifi-on-your-raspberry-pi-withou
 - add ssh stuff (make sure any files you create in home are owned by user 1000)
 - configure host updated hostname in both /etc/hostname and /etc/hosts
 
-
+```
 sudo apt-get update
 sudo apt-get install fswebcam
+```
 
 then on the computer:
+```
 sudo apt-get install python3.7-venv
 sudo apt-get install python-venv
 sudo apt-get install git
 
 sudo apt-get install imagemagick
 
-```
 cd /lib/systemd/system/
 sudo ln -s /home/pi/security/security.service 
 sudo ln -s /home/pi/security/sensor.service 
-```
 
-```
 # enable camera like this if you are using a rasberry pi camera
 sudo raspi-config
 ```
-
 
 after first install
 ```
