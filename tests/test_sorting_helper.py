@@ -32,7 +32,7 @@ def test(tmp_path, file_names):
     for c in file_names:
         # the problem seems to be from create two files in the same nanosecond
         # which seems to not be possible on my desktop, but is possible on ci
-        time.sleep(0.001)  # do not delete based on test passing locally
+        time.sleep(0.01)  # do not delete based on test passing locally
         # the above sleep is needed on my intel computer as well
         # (but not my pi 4)
         # can't make it any smaller though. still don't know if file dates
