@@ -43,9 +43,9 @@ for i in sensor_timer.sensor_timer(pir, led, relay):
 # I got a lot of false alarms from a single PIR sensor, so I put two PIR
 # sensors instead.  They both have to be on to trigger the alarm. This program
 # aggregates the results, and sends it to another GPIO output so that that can
-# be used to activate them main program (but 'pushing a button') that takes a
+# be used to activate the main program (by 'pushing a button') that takes a
 # picture and sends the encrypted email. I used GPIO so that I could manually
-# debug the connection between the two subsystems, because there is not
+# debug the connection between the two subsystems, because there is no
 # automated test doing that.
 
 # I think I have this problem
@@ -71,7 +71,7 @@ for i in sensor_timer.sensor_timer(pir, led, relay):
 # I always assumed was not the case, that two different programs on the same
 # raspberry pi can use different GPIO pins. So I replaced the two relays with
 # their outputs in series, and their inputs connected to the PIR sensors with
-# a second raspberry pi (this one), but still connected it to the input of the
+# a second rpi program (this one), but still connected it to the input of the
 # existing program using GPIO as though it is an external device, and I did
 # that with a 3V relay so that I didn't risk connecting an output pin to an
 # input pin incorrectly. I used the kind of 3V relay that didn't have the
