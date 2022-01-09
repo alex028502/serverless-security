@@ -1,12 +1,13 @@
 # Serverless Encrypted Security Camera
 - uses your email account as the 'backend'
 - uses [delta.chat](https://delta.chat) as the client interface
-Server side development and web clients are my dayjob so this project has
-neither.
-- sends a low res image from every camera and then the higher res versions
-whenever there is motion because the high res ones send faster than the camera
-can be unplugged.
+- handles multiple cameras (day and night)
 - sends a heartbeat with an image from ever camera every hour (configurable)
+- works pretty good
+- end to end encrypted (just like delta.chat)
+
+Server side development and web clients are my dayjob, but this project has
+neither.
 
 ![screenshot of delta chat receiving security images](./docs/Screenshot.png)
 
