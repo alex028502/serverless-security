@@ -86,3 +86,21 @@ but I don't know much about the rust ecosystem, and couldn't figure out how
 to scope it so the rest of my application could use it, and then I found this
 pure python library. If I am the android replacement for this project that I
 mentioned above, I'll probably use delta.chat core.
+
+### Git
+
+If the code in this project is a bit messy sometimes, I tried to make up for
+it by keeping the commits super organised:
+
+![history](./commits.png)
+
+Every commit on the left hand track (`--first-parent`) passes the tests
+and when something is pushed to master that fails the tests, the fixes are
+merged into a group. However, there are no three way diffs. If you look at
+the history with `--first-parent` (if you are into stuff like git history)
+then you will only see incremental changes (is that a good word? atomic?)
+that pass the tests. I fix mistakes like this instead of force pushing so
+that any commit hash that you see in the CI history is available. Where
+there are multiple contributors to a project, you can use this strategy
+to combine interdependent commits by different authors so nobody's work
+gets squashed into anybody else's.
