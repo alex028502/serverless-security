@@ -134,3 +134,4 @@ Other notes are [here](docs/notes.md) about
 * workarounds for pip
 * picamera vs fswebcam
 * email encryption
+* git strategy
