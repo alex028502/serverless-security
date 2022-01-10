@@ -1,5 +1,4 @@
-
-name: Python application
+name: Encrypted Serverless Security Camera on Raspberry Pi
 
 on:
   push:
