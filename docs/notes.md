@@ -104,3 +104,13 @@ that any commit hash that you see in the CI history is available. Where
 there are multiple contributors to a project, you can use this strategy
 to combine interdependent commits by different authors so nobody's work
 gets squashed into anybody else's.
+
+If you ever want to make a commit group like that, you just do this after
+pushing the fix and see that it passes:
+
+```
+git reset --hard [commit right _before_ related commits]
+git merge --no-ff --log origin/master
+```
+
+and then put a headline for the who commit group
