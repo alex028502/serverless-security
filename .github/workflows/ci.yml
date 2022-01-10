@@ -38,8 +38,6 @@ jobs:
         path: coverage/*
     - name: Try to find issues with deployment
       run: make e2e
-    - name: fixup coverage report for publication
-      run: make prepare-coverage-report
     - name: publish
       uses: crazy-max/ghaction-github-pages@v2.5.0
       with:
