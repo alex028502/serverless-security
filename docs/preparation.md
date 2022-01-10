@@ -26,13 +26,13 @@ have to do once per device.  To configure the device:
 ## Install dev environment
 
 I'm sure it's possible to deploy this without all the dev dependencies but I
-haven't tried. I have listed all of the system requirements [here](./sysrq.txt)
+haven't tried. I have listed all of the system requirements [here](./sysrq.txt).
 This file is named after the mysterious key on my keyboard even if it really
 stands for [System Request](https://en.wikipedia.org/wiki/System_request)
 on the key.
 
-The following will only install dependepencies inside the project directory,
-however, it should usually fail if system dependencies are missing.
+The following will only install dependepencies inside the project directory.
+However, it should usually fail if system dependencies are missing.
 
 ```
 make install
@@ -50,7 +50,7 @@ make test
 make e2e
 ```
 
-This will deploy will deploy to the `.target` directory and then run all the
+This will deploy to the `.target` directory, and then run all the
 system tests on the instance deployed to that directory, as well as the venv in
 that directory. This tries to catch dependencies that are not deployed properly,
 and make sure that the pip dependencies that are installed on the target include
