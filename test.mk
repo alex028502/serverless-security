@@ -32,9 +32,14 @@ test: checks
 	$(PY) -m coverage html
 	$(PY) -m coverage json
 	node_modules/.bin/nyc report --reporter html
-	$(MAKE) -f $(MAKEFILE_LIST) $(COV_DIR)/index.html
+	$(MAKE) -f $(MAKEFILE_LIST) $(COV_DIR)/index.html $(COV_DIR)/robots.txt $(COV_DIR)/favicon.ico
 $(COV_DIR)/index.html:
 	ls $(COV_DIR) | grep -v html | xargs -I {} echo '<a href="{}/index.html">{}</a>' > $@
+	echo '<br />' this website is only to diplay the coverage reports >> $@
+$(COV_DIR)/robots.txt:
+	echo 'User-agent: * Disallow: /' > $@
+$(COV_DIR)/favicon.ico:
+	convert -size 16x16 xc:#0000FF $@
 check-coverage:
 	node_modules/.bin/nyc check-coverage
 	cat $(PY_COV_FILE) | jq .totals.percent_covered | grep -w 100
