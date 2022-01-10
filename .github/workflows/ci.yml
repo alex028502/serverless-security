@@ -38,3 +38,9 @@ jobs:
         path: coverage/*
     - name: Try to find issues with deployment
       run: make e2e
+    - name: publish
+      uses: crazy-max/ghaction-github-pages@v2.5.0
+      with:
+        build_dir: coverage
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

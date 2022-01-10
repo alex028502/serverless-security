@@ -36,6 +36,15 @@ usb
 I'm not not an expert on anything in this project. I think a lot about
 [automated testing](./tests) though.
 
+If you are into that sort of thing, you can see all of the test coverage reports
+[here](https://alex028502.github.io/serverless-security/). It includes the
+implementation, the tests themselves, and any other script for deployment or
+testing. They are not that exciting because they are 100% green all the time.
+I had to do some weird stuff to cover everything, and some of the tests are not
+that useful, but it still easier just to make sure everything is covered then
+to look over incomplete test coverage reports, and ask myself if I have
+covered everything that ought to be covered.
+
 This project is a [bunch of little scripts](./package) that call each other.
 That's how it started out when I was doing a lot of manual testing, and then I
 just left it that way.  I thought about changing it to a single process but then
