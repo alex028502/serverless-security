@@ -2,8 +2,7 @@
 - uses your email account as the 'backend'
 - uses [delta.chat](https://delta.chat) as the client interface
 - handles multiple cameras (day and night)
-- sends a heartbeat with an image from ever camera every hour (configurable)
-- works pretty good
+- uses PIR motion sensors instead of anything too clever
 - end to end encrypted (just like delta.chat)
 
 Server side development and web clients are my dayjob, but this project has
@@ -67,6 +66,9 @@ same time, so at least their interface is really easy to debug.  For manual
 testing, it is handy to tune the PIR sensors and try to take pictures
 separately. Their connection is a hardware problem... just like the LEDs and
 the button.
+
+I also put a cron job to take a picture every hour, and send it, just to make
+sure everything is OK in my flat.
 
 Take a look at the coverage reports in github actions to see what I mean by
 100% test coverage.  Bash and Python, including ansible scripts.
@@ -135,3 +137,4 @@ Other notes are [here](docs/notes.md) about
 * picamera vs fswebcam
 * email encryption
 * git strategy
+* detecting cameras

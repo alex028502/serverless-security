@@ -114,3 +114,12 @@ git merge --no-ff --log origin/master
 ```
 
 and then put a headline for the who commit group
+
+### Camera detection
+
+I couldn't find a way to figure out which cameras are attached, so I just made
+[this script](../package/discover.sh) that tries to take a picture from every
+device path that looks like it might be a camera, and then adds any successful
+ones to the list of camera. I don't know how zoom gives you a dropdown of
+(more of a "drop up") of camera options.  I wonder if they also just try to take
+a picture with each one.
