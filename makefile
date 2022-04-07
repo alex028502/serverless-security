@@ -2,10 +2,6 @@ TEST_DIR=./tests
 CONF_DIR=$(TEST_DIR)/config
 KEYS_DIR=$(TEST_DIR)/keys
 IMGS=red blue
-COV_DIR=coverage
-BASH_COV_DIR=$(COV_DIR)/sh
-BASH_COV_FILE=$(BASH_COV_DIR)/index.html
-PY_COV_FILE=coverage.json
 ADDRESSES=tools/addresses.py $(CONF_DIR)/settings.json
 ADDITIONAL=$(TEST_DIR)/additional.txt
 PY=venv/bin/python
@@ -19,7 +15,7 @@ PRI=private-key-1.asc
 # for the entry points where coverage is set up, and deployment tasks that I
 # don't know how to test, and use bash for stuff that I can test.
 
-.PHONY: install $(COV_DIR)/index.html test e2e
+.PHONY: install test e2e
 install:
 	./sysrq.sh
 	python3 -m venv venv
