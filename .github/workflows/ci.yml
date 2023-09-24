@@ -18,7 +18,7 @@ jobs:
         node-version: '12'
     - uses: actions/setup-ruby@v1
       with:
-        ruby-version: '2.6'
+        ruby-version: '2'
     - name: update npm
       run: npm --version && npm install -g npm
     - name: install correct bundler
