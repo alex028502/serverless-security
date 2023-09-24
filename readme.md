@@ -12,14 +12,6 @@ neither.
 
 If you don't have delta.chat, get it; it's awesome.
 
-##### Note
-
-If I had to do this again, I would would not use Ansible for deployment; I have
-since figured out much better strategies including
-* use emacs tramp with magic to work directly on the device
-* clone the repo and install onto new devices
-* create a `.deb` file in ci and install it on devices
-
 ### General Idea
 
 I started by combining two projects from _20 Easy Raspberry Pi Projects_ by
@@ -84,6 +76,24 @@ Take a look at the coverage reports in github actions to see what I mean by
 Two situations that are not handled in any test manual or automated are
 no internet, and no disk space. It says something about testing, and its
 limitations I guess.
+
+### Notes
+
+#### Ansible
+
+If I had to do this again, I would would not use Ansible for deployment; I have
+since figured out much better strategies including
+* use emacs tramp with magic to work directly on the device
+* clone the repo and install onto new devices
+* create a `.deb` file in ci and install it on devices
+
+#### exec
+
+I have a lot of bash scripts that do some set-up and set-up and then run a long
+running program, like [this](package/monitor.sh), and I probably should have
+used exec to run the final process. I probably could have avoided a few exit
+traps and other things I did just to make sure all the processes were cleaned
+up.
 
 ### Set-up
 
