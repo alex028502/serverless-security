@@ -12,6 +12,14 @@ neither.
 
 If you don't have delta.chat, get it; it's awesome.
 
+##### Note
+
+If I had to do this again, I would would not use Ansible for deployment; I have
+since figured out much better strategies including
+* use emacs tramp with magic to work directly on the device
+* clone the repo and install onto new devices
+* create a `.deb` file in ci and install it on devices
+
 ### General Idea
 
 I started by combining two projects from _20 Easy Raspberry Pi Projects_ by
